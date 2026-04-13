@@ -5,9 +5,13 @@ using UnityEngine.InputSystem;
 
 public class PlayerControllerScript : MonoBehaviour
 {
+    [Header("Movement Settings")]
     public Rigidbody2D rb;
     Vector2 moveDirection;
     public static Vector2 pos = new Vector2(0.5f, 0.5f);
+
+    public float checkDistance = 0.5f;
+    public LayerMask collisionLayer;
 
     //Button calling for PlayerController
     private InputSystem_Actions controls;
@@ -108,6 +112,16 @@ public class PlayerControllerScript : MonoBehaviour
 
     private void MovePlayer(Vector2 dir)
     {
+        Vector2 targetPos = (Vector2)transform.position + dir;
+
+        Collider2D hit = Physics2D.OverlapCircle(targetPos, 0.3f, collisionLayer);
+
+        if (hit != null)
+        {
+            Debug.Log("Hit wall");
+            return;
+        }
+
         rb.position += dir;
         transform.position = rb.position;
 
