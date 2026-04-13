@@ -35,7 +35,7 @@ public class AIScript : MonoBehaviour
         transform.position = history.First.Value;
 
         stepsTaken++;
-        if (stepsTaken > 5 || history.Count == 0)
+        if (stepsTaken >= history.Count || history.Count == 0)
         {
             isMimicking = false;
             Debug.Log("AI finished mimic sequence.");

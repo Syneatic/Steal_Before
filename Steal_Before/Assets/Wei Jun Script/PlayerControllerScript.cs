@@ -125,8 +125,8 @@ public class PlayerControllerScript : MonoBehaviour
         rb.position += dir;
         transform.position = rb.position;
 
-        currentNode = movementHistory.AddLast(rb.position);
-        if (movementHistory.Count > maxNode) movementHistory.RemoveFirst();
+        currentNode = movementHistory.AddFirst(rb.position);
+        if (movementHistory.Count > maxNode) movementHistory.RemoveLast();
 
         if (AIMimicScript != null) AIMimicScript.PlayerMove();
     }
