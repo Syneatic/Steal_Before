@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -11,6 +12,13 @@ public class PlayerControllerScript : MonoBehaviour
     //Button calling for PlayerController
     public InputAction playerController;
 
+    //Call the script of AI
+    public AIScript AIMimicScript;
+
+    private LinkedList<Vector2> movementHistory = new LinkedList<Vector2>();
+    private LinkedListNode<Vector2> currentNode;
+    private int maxNode = 6;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,6 +26,7 @@ public class PlayerControllerScript : MonoBehaviour
 
         transform.position = pos;
         rb.position = pos;
+        currentNode = movementHistory.AddLast(rb.position);
     }
 
     // Update is called once per frame
@@ -30,6 +39,8 @@ public class PlayerControllerScript : MonoBehaviour
     {
         playerController.Enable();
         playerController.started += Moving;
+
+
     }
 
     private void OnDisable()
@@ -40,13 +51,18 @@ public class PlayerControllerScript : MonoBehaviour
 
     public Vector2 lastInput;
 
+    public LinkedList<Vector2> GetMovementHistory()
+    {
+        return movementHistory;
+    }
+
     private void Moving(InputAction.CallbackContext context)
     {
         //Check if the frame is pressed
         if (!context.started) return;
 
         var control = context.control;
-        Vector3 moveDir = Vector3.zero;
+        Vector2 moveDir = Vector2.zero;
 
         float controlValue = context.ReadValue<Vector2>().x != 0 ? context.ReadValue<Vector2>().x : context.ReadValue<Vector2>().y;
 
@@ -63,6 +79,21 @@ public class PlayerControllerScript : MonoBehaviour
             moveDir = new Vector3(0, y, 0);
         }
 
-        transform.position += moveDir;
+        if (moveDir != Vector2.zero)
+        {
+            rb.position += moveDir;
+            transform.position = rb.position;
+
+            currentNode = movementHistory.AddLast(rb.position);
+
+            if (movementHistory.Count > maxNode) movementHistory.RemoveFirst();
+
+            if (AIMimicScript != null)
+            {
+                AIMimicScript.PlayerMove();
+            }
+
+                Debug.Log("History Size: " + movementHistory.Count);
+        }
     }
 }
