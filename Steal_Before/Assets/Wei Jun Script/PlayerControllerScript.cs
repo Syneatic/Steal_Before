@@ -10,7 +10,7 @@ public class PlayerControllerScript : MonoBehaviour
     public static Vector2 pos = new Vector2(0.5f, 0.5f);
 
     //Button calling for PlayerController
-    public InputAction playerController;
+    private InputSystem_Actions controls;
 
     //Call the script of AI
     public AIScript AIMimicScript;
@@ -18,6 +18,13 @@ public class PlayerControllerScript : MonoBehaviour
     private LinkedList<Vector2> movementHistory = new LinkedList<Vector2>();
     private LinkedListNode<Vector2> currentNode;
     private int maxNode = 6;
+
+    private List<Vector2> heldDirections = new List<Vector2>();
+
+    private void Awake()
+    {
+        controls = new InputSystem_Actions();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -29,24 +36,23 @@ public class PlayerControllerScript : MonoBehaviour
         currentNode = movementHistory.AddLast(rb.position);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     private void OnEnable()
     {
-        playerController.Enable();
-        playerController.started += Moving;
+        controls.Player.Rewind.started += RewindAbility;
 
+        controls.Player.Move.started += OnMoveStarted;
+        controls.Player.Move.canceled += OnMoveCanceled;
 
+        controls.Enable();
     }
 
     private void OnDisable()
     {
-        playerController.started -= Moving;
-        playerController.Disable();
+        controls.Player.Move.started -= OnMoveStarted;
+        controls.Player.Move.canceled -= OnMoveCanceled;
+        controls.Player.Rewind.started -= RewindAbility;
+
+        controls.Disable();
     }
 
     public Vector2 lastInput;
@@ -56,44 +62,72 @@ public class PlayerControllerScript : MonoBehaviour
         return movementHistory;
     }
 
-    private void Moving(InputAction.CallbackContext context)
+    private Vector2 ReadDominantDirection(InputAction.CallbackContext context)
     {
-        //Check if the frame is pressed
+        Vector2 value = context.action.ReadValue<Vector2>();
+        if (Mathf.Abs(value.x) > Mathf.Abs(value.y))
+            return new Vector2(Mathf.Sign(value.x), 0);
+        if (Mathf.Abs(value.y) > Mathf.Abs(value.x))
+            return new Vector2(0, Mathf.Sign(value.y));
+        return Vector2.zero;
+    }
+
+    private void OnMoveStarted(InputAction.CallbackContext context)
+    {
+        Vector2 dir = ReadDominantDirection(context);
+        if (dir == Vector2.zero) return;
+
+        // Remove if already tracked (shouldn't happen, but safety net)
+        heldDirections.Remove(dir);
+        // Add to end — most recently pressed
+        heldDirections.Add(dir);
+
+        MovePlayer(dir);
+    }
+
+    private void OnMoveCanceled(InputAction.CallbackContext context)
+    {
+        Vector2 dir = ReadDominantDirection(context);
+
+        // If canceled returns zero (all keys released), clear everything
+        if (dir == Vector2.zero)
+        {
+            heldDirections.Clear();
+            return;
+        }
+
+        heldDirections.Remove(dir);
+
+        // If another key is still held, move in that direction
+        if (heldDirections.Count > 0)
+        {
+            Vector2 fallback = heldDirections[heldDirections.Count - 1];
+            MovePlayer(fallback);
+        }
+    }
+
+    private void MovePlayer(Vector2 dir)
+    {
+        rb.position += dir;
+        transform.position = rb.position;
+
+        currentNode = movementHistory.AddLast(rb.position);
+        if (movementHistory.Count > maxNode) movementHistory.RemoveFirst();
+
+        if (AIMimicScript != null) AIMimicScript.PlayerMove();
+    }
+
+    private void RewindAbility(InputAction.CallbackContext context)
+    {
         if (!context.started) return;
 
-        var control = context.control;
-        Vector2 moveDir = Vector2.zero;
-
-        float controlValue = context.ReadValue<Vector2>().x != 0 ? context.ReadValue<Vector2>().x : context.ReadValue<Vector2>().y;
-
-        if (control.name == "a" || control.name == "d")
+        if (AIMimicScript != null)
         {
-            // Move horizontal based on THIS key's value only
-            float x = (control.name == "a") ? -1 : 1;
-            moveDir = new Vector3(x, 0, 0);
-        }
-        else if (control.name == "w" || control.name == "s")
-        {
-            // Move vertical based on THIS key's value only
-            float y = (control.name == "s") ? -1 : 1;
-            moveDir = new Vector3(0, y, 0);
+            // Start the mimic behavior only when E is pressed
+            AIMimicScript.ActivateMimic();
         }
 
-        if (moveDir != Vector2.zero)
-        {
-            rb.position += moveDir;
-            transform.position = rb.position;
-
-            currentNode = movementHistory.AddLast(rb.position);
-
-            if (movementHistory.Count > maxNode) movementHistory.RemoveFirst();
-
-            if (AIMimicScript != null)
-            {
-                AIMimicScript.PlayerMove();
-            }
-
-                Debug.Log("History Size: " + movementHistory.Count);
-        }
+        //Make the player go back to the 5 steps
+        transform.position = movementHistory.First.Value;
     }
 }
