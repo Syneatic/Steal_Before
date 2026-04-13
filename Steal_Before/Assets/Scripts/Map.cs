@@ -20,20 +20,20 @@ public class Map : MonoBehaviour
         {
             for(int j = 0; j < height; ++j)
             {
-                if(i % 2 == 0 && j % 2 == 0)
-                {
-                    mapArray[i, j] = Instantiate(tile, new Vector3(i, j, 0), Quaternion.identity);
-                }
-                else
-                {
-                    mapArray[i, j] = Instantiate(tile, new Vector3(i, j, 0), Quaternion.identity);
-                    mapArray[i, j].GetComponent<SpriteRenderer>().color = Color.black;
-                }
+                //if(i % 2 == 0 && j % 2 == 0)
+                //{
+                //    mapArray[i, j] = Instantiate(tile, new Vector3(i, j, 0), Quaternion.identity);
+                //}
+                //else
+                //{
+                //    mapArray[i, j] = Instantiate(tile, new Vector3(i, j, 0), Quaternion.identity);
+                //   // mapArray[i, j].GetComponent<SpriteRenderer>().color = Color.black;
+                //}
 
-                if (i % 2 == 1 && j % 2 == 1)
-                {
+                //if (i % 2 == 1 && j % 2 == 1)
+                //{
                     mapArray[i, j] = Instantiate(tile, new Vector3(i, j, 0), Quaternion.identity);
-                }
+                //}
             }
         }
 
