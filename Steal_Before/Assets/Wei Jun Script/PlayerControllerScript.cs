@@ -1,0 +1,147 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+
+public class PlayerControllerScript : MonoBehaviour
+{
+    [Header("Movement Settings")]
+    public Rigidbody2D rb;
+    Vector2 moveDirection;
+    public static Vector2 pos = new Vector2(0.5f, 0.5f);
+
+    public float checkDistance = 0.5f;
+    public LayerMask collisionLayer;
+
+    //Button calling for PlayerController
+    private InputSystem_Actions controls;
+
+    //Call the script of AI
+    public AIScript AIMimicScript;
+
+    private LinkedList<Vector2> movementHistory = new LinkedList<Vector2>();
+    private LinkedListNode<Vector2> currentNode;
+    private int maxNode = 6;
+
+    private List<Vector2> heldDirections = new List<Vector2>();
+
+    private void Awake()
+    {
+        controls = new InputSystem_Actions();
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+
+        transform.position = pos;
+        rb.position = pos;
+        currentNode = movementHistory.AddLast(rb.position);
+    }
+
+    private void OnEnable()
+    {
+        controls.Player.Rewind.started += RewindAbility;
+
+        controls.Player.Move.started += OnMoveStarted;
+        controls.Player.Move.canceled += OnMoveCanceled;
+
+        controls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        controls.Player.Move.started -= OnMoveStarted;
+        controls.Player.Move.canceled -= OnMoveCanceled;
+        controls.Player.Rewind.started -= RewindAbility;
+
+        controls.Disable();
+    }
+
+    public Vector2 lastInput;
+
+    public LinkedList<Vector2> GetMovementHistory()
+    {
+        return movementHistory;
+    }
+
+    private Vector2 ReadDominantDirection(InputAction.CallbackContext context)
+    {
+        Vector2 value = context.action.ReadValue<Vector2>();
+        if (Mathf.Abs(value.x) > Mathf.Abs(value.y))
+            return new Vector2(Mathf.Sign(value.x), 0);
+        if (Mathf.Abs(value.y) > Mathf.Abs(value.x))
+            return new Vector2(0, Mathf.Sign(value.y));
+        return Vector2.zero;
+    }
+
+    private void OnMoveStarted(InputAction.CallbackContext context)
+    {
+        Vector2 dir = ReadDominantDirection(context);
+        if (dir == Vector2.zero) return;
+
+        // Remove if already tracked (shouldn't happen, but safety net)
+        heldDirections.Remove(dir);
+        // Add to end — most recently pressed
+        heldDirections.Add(dir);
+
+        MovePlayer(dir);
+    }
+
+    private void OnMoveCanceled(InputAction.CallbackContext context)
+    {
+        Vector2 dir = ReadDominantDirection(context);
+
+        // If canceled returns zero (all keys released), clear everything
+        if (dir == Vector2.zero)
+        {
+            heldDirections.Clear();
+            return;
+        }
+
+        heldDirections.Remove(dir);
+
+        // If another key is still held, move in that direction
+        if (heldDirections.Count > 0)
+        {
+            Vector2 fallback = heldDirections[heldDirections.Count - 1];
+            MovePlayer(fallback);
+        }
+    }
+
+    private void MovePlayer(Vector2 dir)
+    {
+        Vector2 targetPos = (Vector2)transform.position + dir;
+
+        Collider2D hit = Physics2D.OverlapCircle(targetPos, 0.3f, collisionLayer);
+
+        if (hit != null)
+        {
+            Debug.Log("Hit wall");
+            return;
+        }
+
+        rb.position += dir;
+        transform.position = rb.position;
+
+        currentNode = movementHistory.AddFirst(rb.position);
+        if (movementHistory.Count > maxNode) movementHistory.RemoveLast();
+
+        if (AIMimicScript != null) AIMimicScript.PlayerMove();
+    }
+
+    private void RewindAbility(InputAction.CallbackContext context)
+    {
+        if (!context.started) return;
+
+        if (AIMimicScript != null)
+        {
+            // Start the mimic behavior only when E is pressed
+            AIMimicScript.ActivateMimic();
+        }
+
+        //Make the player go back to the 5 steps
+        transform.position = movementHistory.First.Value;
+    }
+}
