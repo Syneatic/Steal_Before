@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,39 +11,63 @@ public class AIScript : MonoBehaviour
     private bool isMimicking = false;
     private int stepsTaken = 0;
 
-    public void ActivateMimic()
+    //Definition of the number of steps
+    private List<Vector2> pathToFollow;
+
+
+    public void ActivateMimic(List<Vector2> history)
     {
+
+        if (history == null) return;
+
+        pathToFollow = history;
         isMimicking = true;
         stepsTaken = 0;
         GetComponent<SpriteRenderer>().enabled = true;
-        var history = player.GetMovementHistory();
-        transform.position = history.First.Value;
+
+        //Start at the oldest point in the list
+        transform.position = pathToFollow[0];
         Debug.Log("AI Mimic: True");
+        Debug.Log(pathToFollow.Count);
     }
 
     public void PlayerMove()
     {
-        if (!isMimicking) return;
+        if (!isMimicking || pathToFollow == null) return;
 
-        var history = player.GetMovementHistory();
+        ++stepsTaken;
 
-        if (history.Count == 0)
+        if (stepsTaken < pathToFollow.Count)
         {
-            isMimicking = false;
-            return;
+            transform.position = pathToFollow[stepsTaken];
+            Debug.Log($"AI moving. Step: {stepsTaken}");
         }
-
-        transform.position = history.First.Value;
-
-        stepsTaken++;
-        if (stepsTaken >= 5 || history.Count == 0)
+        
+        if (stepsTaken >= pathToFollow.Count)
         {
-            isMimicking = false;
-            Debug.Log("AI finished mimic sequence.");
-
-            //Set the AI to invisble
-            GetComponent<SpriteRenderer>().enabled = false;
+            EndMimic();
         }
-        Debug.Log("AI moving");
+    }
+
+    public void EndMimic()
+    {
+        isMimicking = false;
+        GetComponent<SpriteRenderer>().enabled = false;
+        Debug.Log("AI finished mimic sequence.");
+    }
+
+    private void OnEnable()
+    {
+        GameStepManager.OnPlayerStep += PlayerMove;
+    }
+
+    private void OnDisable()
+    {
+        GameStepManager.OnPlayerStep -= PlayerMove;
+    }
+
+    public bool GetIsMimic()
+    {
+        return isMimicking;
     }
 }

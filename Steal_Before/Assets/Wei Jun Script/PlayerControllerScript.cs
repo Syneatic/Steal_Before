@@ -19,8 +19,8 @@ public class PlayerControllerScript : MonoBehaviour
     //Call the script of AI
     public AIScript AIMimicScript;
 
+    //Link list to store the data of the player movement (Vector2)
     private LinkedList<Vector2> movementHistory = new LinkedList<Vector2>();
-    private LinkedListNode<Vector2> currentNode;
     private int maxNode = 6;
 
     private List<Vector2> heldDirections = new List<Vector2>();
@@ -37,7 +37,7 @@ public class PlayerControllerScript : MonoBehaviour
 
         transform.position = pos;
         rb.position = pos;
-        currentNode = movementHistory.AddLast(rb.position);
+        movementHistory.AddLast(rb.position);
     }
 
     private void OnEnable()
@@ -125,23 +125,53 @@ public class PlayerControllerScript : MonoBehaviour
         rb.position += dir;
         transform.position = rb.position;
 
-        currentNode = movementHistory.AddLast(rb.position);
-        if (movementHistory.Count > maxNode) movementHistory.RemoveFirst();
+        // The Signal for the AI to move
+        GameStepManager.Instance.RegisterStep(transform.position);
 
-        if (AIMimicScript != null) AIMimicScript.PlayerMove();
+        if (!AIMimicScript.GetIsMimic())
+        {
+            movementHistory.AddLast(rb.position);
+
+            if (movementHistory.Count > maxNode) movementHistory.RemoveFirst();
+        }
+        else
+        {
+            if (movementHistory.Count > 0)
+            {
+                movementHistory.AddLast(rb.position);
+                movementHistory.RemoveFirst();
+            }
+        }
     }
 
     private void RewindAbility(InputAction.CallbackContext context)
     {
-        if (!context.started) return;
+
+        if (!context.started || movementHistory.Count < maxNode)
+        {
+            Debug.Log("Not enough steps have been recorded to rewind yet!");
+            return;
+        }
+
+        // Start the mimic behavior only when E is pressed
+        List<Vector2> pathForAI = new List<Vector2>(movementHistory);
+
+        //Make the player go back to the 5 steps
+        Vector2 rewindPos = movementHistory.First.Value;
+
+        //Reset player state
+        movementHistory.Clear();
+        movementHistory.AddLast(rewindPos);
+
+        transform.position = rewindPos;
+        rb.position = rewindPos; //Update Rigidbody too to keep them in sync
 
         if (AIMimicScript != null)
         {
-            // Start the mimic behavior only when E is pressed
-            AIMimicScript.ActivateMimic();
+            AIMimicScript.ActivateMimic(pathForAI);
+            Debug.Log("Activating Mimic");
         }
 
-        //Make the player go back to the 5 steps
-        transform.position = movementHistory.First.Value;
+        Debug.Log("Rewind complete. History Resets");
     }
 }
