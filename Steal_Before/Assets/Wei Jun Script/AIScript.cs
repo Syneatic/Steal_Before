@@ -41,6 +41,14 @@ public class AIScript : MonoBehaviour
         {
             transform.position = pathToFollow[stepsTaken];
             Debug.Log($"AI moving. Step: {stepsTaken}");
+
+            Collider2D hit = Physics2D.OverlapPoint(transform.position, LayerMask.GetMask("Triggers"));
+
+            if (hit != null && hit.TryGetComponent(out TriggerScript button))
+            {
+                button.PushButton();
+                Debug.Log("AI pressed a button!");
+            }
         }
         
         if (stepsTaken >= pathToFollow.Count)
@@ -58,12 +66,12 @@ public class AIScript : MonoBehaviour
 
     private void OnEnable()
     {
-        GameStepManager.OnPlayerStep += PlayerMove;
+        GameStepManager.Instance.OnPlayerStep += PlayerMove;
     }
 
     private void OnDisable()
     {
-        GameStepManager.OnPlayerStep -= PlayerMove;
+        GameStepManager.Instance.OnPlayerStep -= PlayerMove;
     }
 
     public bool GetIsMimic()

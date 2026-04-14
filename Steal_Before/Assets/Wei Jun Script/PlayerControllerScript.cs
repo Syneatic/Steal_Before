@@ -12,6 +12,7 @@ public class PlayerControllerScript : MonoBehaviour
 
     public float checkDistance = 0.5f;
     public LayerMask collisionLayer;
+    public LayerMask Triggers;
 
     //Button calling for PlayerController
     private InputSystem_Actions controls;
@@ -116,6 +117,7 @@ public class PlayerControllerScript : MonoBehaviour
 
         Collider2D hit = Physics2D.OverlapCircle(targetPos, 0.3f, collisionLayer);
 
+
         if (hit != null)
         {
             Debug.Log("Hit wall");
@@ -124,9 +126,6 @@ public class PlayerControllerScript : MonoBehaviour
 
         rb.position += dir;
         transform.position = rb.position;
-
-        // The Signal for the AI to move
-        GameStepManager.Instance.RegisterStep(transform.position);
 
         if (!AIMimicScript.GetIsMimic())
         {
@@ -142,6 +141,19 @@ public class PlayerControllerScript : MonoBehaviour
                 movementHistory.RemoveFirst();
             }
         }
+
+        Collider2D hitTrigger = Physics2D.OverlapCircle(targetPos, 0.3f, Triggers);
+
+        if (hitTrigger != null)
+        {
+            if (hitTrigger.TryGetComponent(out TriggerScript button))
+            {
+                button.PushButton();
+            }
+        }
+
+        // The Signal for the AI to move
+        GameStepManager.Instance.RegisterStep(transform.position);
     }
 
     private void RewindAbility(InputAction.CallbackContext context)
@@ -152,6 +164,8 @@ public class PlayerControllerScript : MonoBehaviour
             Debug.Log("Not enough steps have been recorded to rewind yet!");
             return;
         }
+
+        GameStepManager.Instance.TriggerRewind();
 
         // Start the mimic behavior only when E is pressed
         List<Vector2> pathForAI = new List<Vector2>(movementHistory);
