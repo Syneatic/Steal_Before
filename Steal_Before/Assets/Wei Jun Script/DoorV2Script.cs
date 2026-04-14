@@ -1,9 +1,10 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DoorV2Script : MonoBehaviour
 {
-    [SerializeField] private TriggerScript buttonA;
-    [SerializeField] private TriggerScript buttonB;
+    [SerializeField] private List<TriggerScript> Triggers = new List<TriggerScript>();
 
     SpriteRenderer render;
     private Collider2D col;
@@ -16,17 +17,19 @@ public class DoorV2Script : MonoBehaviour
 
     public void CheckButtonLogic()
     {
-        // The Boolean AND logic
-        if (buttonA.IsActivated && buttonB.IsActivated)
+        for (var num = 0;  num < Triggers.Count; num++)
         {
-            render.enabled = false;
-            col.enabled = false;
+            // The Boolean AND logic
+            if (!Triggers[num].IsActivated)
+            {
+                render.enabled = true;
+                col.enabled = true;
+                return;
+            }
         }
-        else
-        {
-            render.enabled = true;
-            col.enabled = true;
-        }
+
+        render.enabled = false;
+        col.enabled = false;
     }
 
     //private void OpenDoor()

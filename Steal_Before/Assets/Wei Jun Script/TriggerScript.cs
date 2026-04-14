@@ -6,10 +6,10 @@ public class TriggerScript : MonoBehaviour
 
     [SerializeField] private Color activatedColor = Color.red;
     [SerializeField] private Color idleColor = Color.green;
-    [SerializeField] private DoorV2Script targetDoor;
+    [SerializeField] private DoorV2Script ObjectInteract;
 
     public int stepToStayActive = 5;
-    public int currentStepsleft = 0;
+    private int currentStepsleft = 0;
     private bool isActive = false;
 
     private SpriteRenderer spriteRenderer;
@@ -75,7 +75,7 @@ public class TriggerScript : MonoBehaviour
         Debug.Log("Button is pressed");
         isActive = true;
 
-        targetDoor.CheckButtonLogic();
+        ObjectInteract.CheckButtonLogic();
     }
 
     public void DeactivateButton()
@@ -87,9 +87,9 @@ public class TriggerScript : MonoBehaviour
         if (spriteRenderer != null) spriteRenderer.color = idleColor;
 
         // Notify the door to check its conditions
-        if (targetDoor != null)
+        if (ObjectInteract != null)
         {
-            targetDoor.CheckButtonLogic();
+            ObjectInteract.CheckButtonLogic();
         }
 
         Debug.Log("Button has turn back on");

@@ -13,6 +13,7 @@ public class PlayerControllerScript : MonoBehaviour
     public float checkDistance = 0.5f;
     public LayerMask collisionLayer;
     public LayerMask Triggers;
+    public LayerMask enemyLayer;
 
     //Button calling for PlayerController
     private InputSystem_Actions controls;
@@ -113,10 +114,10 @@ public class PlayerControllerScript : MonoBehaviour
 
     private void MovePlayer(Vector2 dir)
     {
-        Vector2 targetPos = (Vector2)transform.position + dir;
+        Vector2 startPos = transform.position;
+        Vector2 targetPos = startPos + dir;
 
         Collider2D hit = Physics2D.OverlapCircle(targetPos, 0.3f, collisionLayer);
-
 
         if (hit != null)
         {
@@ -154,6 +155,20 @@ public class PlayerControllerScript : MonoBehaviour
 
         // The Signal for the AI to move
         GameStepManager.Instance.RegisterStep(transform.position);
+
+        Physics2D.SyncTransforms();
+
+        // 2. CHECK: Did we land on the same tile?
+        Collider2D hitLand = Physics2D.OverlapCircle(transform.position, 0.3f, enemyLayer);
+
+        // 3. CHECK: Did we "Swap" places? (Did the enemy land where we just were?)
+        Collider2D hitSwap = Physics2D.OverlapCircle(startPos, 0.3f, enemyLayer);
+
+        if (hitLand != null || hitSwap != null)
+        {
+            // LOSE LOGIC
+            Debug.Log("Collision or Swap detected!");
+        }
     }
 
     private void RewindAbility(InputAction.CallbackContext context)
