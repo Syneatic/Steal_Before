@@ -172,9 +172,16 @@ public class PlayerControllerScript : MonoBehaviour
 
         if (hitTrigger != null)
         {
-            if (hitTrigger.TryGetComponent(out TriggerScript button))
+            if (hitTrigger.CompareTag("Button"))
             {
-                button.PushButton();
+                if (hitTrigger.TryGetComponent(out TriggerScript button))
+                {
+                    button.PushButton();
+                }
+            }
+            else if (hitTrigger.CompareTag("Goal"))
+            {
+                GameStepManager.Instance.GoalReach();
             }
         }
 
@@ -195,8 +202,10 @@ public class PlayerControllerScript : MonoBehaviour
             Debug.Log("Collision");
             if (hitLand.TryGetComponent(out EnemyPatrol enemy))
             {
-                enemy.EnemyTouchPlayer();
+                //enemy.EnemyTouchPlayer();
+
             }
+            GameStepManager.Instance.TriggerTouch();
         }
     }
 
