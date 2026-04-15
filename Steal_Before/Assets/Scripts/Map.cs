@@ -15,8 +15,18 @@ public enum FloorType
     TBlockHoriontal,            // T Block Hori
     TBlockVerti,                // T Block Verti
     TopHorizontalWall,          // Top HWall
-    Obstacle
+    VerticalEnd,                // Vertical End
+    HorizontalEnd,              // Horizontal End
+    Obstacle                    // Obstacle
 }
+
+public enum ObstacleType
+{ 
+    None,
+    Laser,                      // Laser
+    Enemy                       // Enemy
+}
+
 
 [ExecuteAlways]
 public class Map : MonoBehaviour
@@ -26,32 +36,40 @@ public class Map : MonoBehaviour
     public int height;
     public float tileSize = 1f;
     public GameObject[] tilePrefabs;
-    public Transform[] objstaclePos;
+    public GameObject[] obstaclePrefabs;
 
     [Header("Editor Tools")]
     [Tooltip("Check this box to manually redraw the map after changing a tile in the array below.")]
     public bool refreshMap = false;
 
     [Header("Saved Map Data")]
-    // 1. THIS IS THE FIX. We changed [,] to [] and made it public.
-    // Unity will now permanently save this list to your Scene file!
     public FloorType[] mapGrid;
+    public ObstacleType[] obstacleGrid;
 
     // Private classes
     [SerializeField, HideInInspector] private int lastWidth;
     [SerializeField, HideInInspector] private int lastHeight;
     private Transform boundaryHolder;
+    private Transform obstacleHolder;
 
     void Update()
     {
         if (!Application.isPlaying)
         {
-            // 2. We check if the size changed, OR if the array is empty, OR if you clicked the refresh checkbox
             if (width != lastWidth || height != lastHeight || mapGrid == null || mapGrid.Length != (width * height) || refreshMap)
             {
-                // We ONLY overwrite the data with the default generation if the physical dimensions changed.
-                // This protects your manual edits!
-                if (width != lastWidth || height != lastHeight || mapGrid == null || mapGrid.Length != (width * height))
+                // 1. If the map is completely blank, generate from scratch
+                if (mapGrid == null || mapGrid.Length == 0)
+                {
+                    GenerateMapData();
+                }
+                // 2. If the size changed, do a smart transfer!
+                else if (width != lastWidth || height != lastHeight)
+                {
+                    ResizeMapData(lastWidth, lastHeight);
+                }
+                // 3. Fallback for data corruption
+                else if (mapGrid.Length != (width * height))
                 {
                     GenerateMapData();
                 }
@@ -60,7 +78,7 @@ public class Map : MonoBehaviour
 
                 lastWidth = width;
                 lastHeight = height;
-                refreshMap = false; // Uncheck the box automatically
+                refreshMap = false;
             }
         }
     }
@@ -69,6 +87,7 @@ public class Map : MonoBehaviour
     {
         // Initialize the 1D array with total area (width * height)
         mapGrid = new FloorType[width * height];
+        obstacleGrid = new ObstacleType[width * height];
 
         for (int i = 0; i < width; ++i)
         {
@@ -106,13 +125,17 @@ public class Map : MonoBehaviour
         holderObj.transform.parent = this.transform;
         boundaryHolder = holderObj.transform;
 
+        GameObject obsObj = new GameObject("GeneratedObstacles");
+        obsObj.transform.parent = this.transform;
+        obstacleHolder = obsObj.transform;
+
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                // 4. Read from the 1D array using the exact same math formula
                 int index = x + (y * width);
                 FloorType tileID = mapGrid[index];
+                ObstacleType obsID = obstacleGrid[index];
 
                 Vector3 spawnPosition = new Vector3(x * tileSize, y * tileSize, 0);
 
@@ -166,6 +189,15 @@ public class Map : MonoBehaviour
                         spawnedWall.hideFlags = HideFlags.None;
                     }
                 }
+
+                if (obsID != ObstacleType.None)
+                {
+                    if (((int)obsID) < obstaclePrefabs.Length && obstaclePrefabs[((int)obsID)] != null)
+                    {
+                        GameObject spawnedObs = Instantiate(obstaclePrefabs[((int)obsID)], spawnPosition, Quaternion.identity, obstacleHolder);
+                        spawnedObs.hideFlags = HideFlags.None;
+                    }
+                }
             }
         }
     }
@@ -177,5 +209,76 @@ public class Map : MonoBehaviour
         {
             DestroyImmediate(oldHolder.gameObject);
         }
+
+        Transform oldObsHolder = transform.Find("GeneratedObstacles");
+        if (oldObsHolder != null)
+        {
+            DestroyImmediate(oldObsHolder.gameObject);
+        }
+    }
+
+    void ResizeMapData(int oldWidth, int oldHeight)
+    {
+        FloorType[] oldGrid = mapGrid;
+        ObstacleType[] oldObstacles = obstacleGrid; // Save old obstacles
+
+        mapGrid = new FloorType[width * height];
+        obstacleGrid = new ObstacleType[width * height]; // New blank canvas
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                int newIndex = x + (y * width);
+
+                if ((x == 0 && y == 0) || (x == width - 1 && y == height - 1) || (x == 0 && y == height - 1) || (x == width - 1 && y == 0))
+                {
+                    mapGrid[newIndex] = FloorType.BaseCornerWall;
+                }
+                else if ((x == 0 && y <= height - 2) || (x == width - 1 && y <= height - 2))
+                {
+                    mapGrid[newIndex] = FloorType.VerticalWall;
+                }
+                else if ((x <= width - 1 && y == 0) || (x <= width - 1 && y == height - 1))
+                {
+                    mapGrid[newIndex] = FloorType.BaseHorizontalWall;
+                }
+                else
+                {
+                    if (x < oldWidth && y < oldHeight && oldGrid != null && oldGrid.Length == (oldWidth * oldHeight))
+                    {
+                        int oldIndex = x + (y * oldWidth);
+                        FloorType oldTile = oldGrid[oldIndex];
+                        if (IsBoundaryWall(oldTile))
+                        {
+                            mapGrid[newIndex] = FloorType.Tile;
+                            obstacleGrid[newIndex] = ObstacleType.None; // Ensure wall replaces any obstacle
+                        }
+                        else
+                        {
+                            mapGrid[newIndex] = oldTile;
+                            // Transfer the obstacle safely
+                            if (oldObstacles != null && oldObstacles.Length == (oldWidth * oldHeight))
+                            {
+                                obstacleGrid[newIndex] = oldObstacles[oldIndex];
+                            }
+                        }
+                    }
+                    else
+                    {
+                        mapGrid[newIndex] = FloorType.Tile;
+                        obstacleGrid[newIndex] = ObstacleType.None;
+                    }
+                }
+            }
+        }
+        Debug.Log($"Map resized! Safely transferred data from {oldWidth}x{oldHeight} to {width}x{height}.");
+    }
+
+    bool IsBoundaryWall(FloorType type)
+    {
+        return type == FloorType.BaseCornerWall ||
+               type == FloorType.VerticalWall ||
+               type == FloorType.BaseHorizontalWall;
     }
 }
