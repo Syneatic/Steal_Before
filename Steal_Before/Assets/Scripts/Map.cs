@@ -15,8 +15,11 @@ public enum FloorType
     TBlockHoriontal,            // T Block Hori
     TBlockVerti,                // T Block Verti
     TopHorizontalWall,          // Top HWall
-    Obstacle
+    VerticalEnd,                // Vertical End
+    HorizontalEnd,              // Horizontal End
+    Obstacle                    // Obstacle
 }
+
 
 [ExecuteAlways]
 public class Map : MonoBehaviour
