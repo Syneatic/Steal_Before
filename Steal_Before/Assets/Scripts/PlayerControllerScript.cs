@@ -8,6 +8,9 @@ public class PlayerControllerScript : MonoBehaviour
     [Header("Animation")]
     public Animator animator;
 
+    [Header("UI Reference")]
+    [SerializeField] private GameplayUIManager GPuiManager;
+
 
     [Header("Movement Settings")]
     public Rigidbody2D rb;
@@ -168,6 +171,8 @@ public class PlayerControllerScript : MonoBehaviour
             }
         }
 
+        UpdatePendantUI();
+
         Collider2D hitTrigger = Physics2D.OverlapCircle(transform.position, 0.3f, Triggers);
 
         if (hitTrigger != null)
@@ -199,12 +204,6 @@ public class PlayerControllerScript : MonoBehaviour
         if (hitLand != null/* || hitSwap != null*/)
         {
             // LOSE LOGIC
-            Debug.Log("Collision");
-            if (hitLand.TryGetComponent(out EnemyPatrol enemy))
-            {
-                //enemy.EnemyTouchPlayer();
-
-            }
             GameStepManager.Instance.TriggerTouch();
         }
     }
@@ -228,6 +227,7 @@ public class PlayerControllerScript : MonoBehaviour
 
         //Reset player state
         movementHistory.Clear();
+        UpdatePendantUI();
         movementHistory.AddLast(rewindPos);
 
         //transform.position = rewindPos;
@@ -241,4 +241,14 @@ public class PlayerControllerScript : MonoBehaviour
 
         Debug.Log("Rewind complete. History Resets");
     }
+
+    public void UpdatePendantUI()
+    {
+        if (GPuiManager != null)
+        {
+            GPuiManager.UpdatePendant(movementHistory.Count, maxNode);
+        }
+    }
+    public int GetMovementCount() { return movementHistory.Count; }
+    public int GetMaxNodes() { return maxNode; }
 }
