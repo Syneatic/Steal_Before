@@ -371,7 +371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Map
   width: 5
   height: 5
-  tile: {fileID: 8741635521376487761, guid: 44b8ec870d5c36448b40e801a581cfc7, type: 3}
+  tile: {fileID: 2840404082216151448, guid: 8da52e2a22e53964e9a91422eccea863, type: 3}
 --- !u!4 &814578112
 Transform:
   m_ObjectHideFlags: 0
