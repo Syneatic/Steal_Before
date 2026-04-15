@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
     public GameObject SettingsPage;
     public GameObject CreditsPage;
     public GameObject MainMenu;
-    //public GameObject LevelSelect;
+    public GameObject LevelSelect;
 
     private void Awake()
     {
@@ -21,12 +21,12 @@ public class UIManager : MonoBehaviour
         MainMenu.SetActive(true);
         CreditsPage.SetActive(false);
         SettingsPage.SetActive(false);
+        LevelSelect.SetActive(false);
     }
 
-    public void StartGame()
+    public void ToggleStartGame()
     {
-        MainMenu.SetActive(false);
-        SceneManager.LoadScene("Lvl1");
+        ToggleUIPair(ref MainMenu, ref LevelSelect);
     }
 
     public void ToggleSettings()
@@ -37,6 +37,54 @@ public class UIManager : MonoBehaviour
     public void ToggleCredits()
     {
         ToggleUIPair(ref MainMenu, ref CreditsPage);
+    }
+
+    public void LevelSelect1()
+    {
+        MainMenu.SetActive(false);
+        SceneManager.LoadScene("Lvl1");
+    }
+
+    public void LevelSelect2()
+    {
+        MainMenu.SetActive(false);
+        SceneManager.LoadScene("Lvl2");
+    }
+
+    public void LevelSelect3()
+    {
+        MainMenu.SetActive(false);
+        SceneManager.LoadScene("Lvl3");
+    }
+
+    public void LevelSelect4()
+    {
+        MainMenu.SetActive(false);
+        SceneManager.LoadScene("Lvl4");
+    }
+
+    public void LevelSelect5()
+    {
+        MainMenu.SetActive(false);
+        SceneManager.LoadScene("Lvl5");
+    }
+
+    public void LevelSelect6()
+    {
+        MainMenu.SetActive(false);
+        SceneManager.LoadScene("Lvl6");
+    }
+
+    public void LevelSelect7()
+    {
+        MainMenu.SetActive(false);
+        SceneManager.LoadScene("Lvl7");
+    }
+
+    public void LevelSelect8()
+    {
+        MainMenu.SetActive(false);
+        SceneManager.LoadScene("Lvl8");
     }
 
     public void QuitGame()
