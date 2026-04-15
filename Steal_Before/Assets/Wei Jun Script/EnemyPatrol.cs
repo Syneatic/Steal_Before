@@ -67,7 +67,7 @@ public class EnemyPatrol : MonoBehaviour
         enemyHistory.Add(transform.position);
         directionHistory.Add(direction);
 
-        if (enemyHistory.Count > GameStepManager.MaxHistory - 1)
+        if (enemyHistory.Count > GameStepManager.Instance.MaxHistory - 1)
         {
             enemyHistory.RemoveAt(0);
             directionHistory.RemoveAt(0);

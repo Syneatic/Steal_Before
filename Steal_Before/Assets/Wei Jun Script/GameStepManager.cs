@@ -8,7 +8,7 @@ public class GameStepManager : MonoBehaviour
     public static GameStepManager Instance;
 
     public List<Vector2> playerHistory = new List<Vector2>();
-    public static int MaxHistory = 7;
+    public int MaxHistory { get; set; } = 7;
 
     public event System.Action OnPlayerStep;
     public event System.Action OnRewind;
