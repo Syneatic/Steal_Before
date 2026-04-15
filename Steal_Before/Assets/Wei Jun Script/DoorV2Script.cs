@@ -2,10 +2,13 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum InteractType {Door, Laser }
+
 public class DoorV2Script : MonoBehaviour
 {
     [SerializeField] private List<TriggerScript> Triggers = new List<TriggerScript>();
 
+    public InteractType interactable;
     SpriteRenderer render;
     private Collider2D col;
 
@@ -13,14 +16,16 @@ public class DoorV2Script : MonoBehaviour
     {
         render = GetComponent<SpriteRenderer>();
         col = GetComponent<Collider2D>();
+
+        CheckButtonLogic();
     }
 
     public void CheckButtonLogic()
     {
-        for (var num = 0;  num < Triggers.Count; num++)
+        foreach (var trigger in Triggers)
         {
             // The Boolean AND logic
-            if (!Triggers[num].IsActivated)
+            if (!trigger.IsActivated)
             {
                 render.enabled = true;
                 col.enabled = true;
@@ -31,17 +36,5 @@ public class DoorV2Script : MonoBehaviour
         render.enabled = false;
         col.enabled = false;
     }
-
-    //private void OpenDoor()
-    //{
-    //    Debug.Log("Both buttons active. Door opening!");
-
-    //    // For a simple puzzle: just make the door disappear
-    //    gameObject.SetActive(false);
-
-    //    // Or, if you want to keep the object but walk through it:
-    //    // GetComponent<Collider2D>().enabled = false;
-    //    // GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.3f); // Make transparent
-    //}
 }
 
