@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using UnityEditor.PackageManager;
@@ -9,10 +8,11 @@ public class GameStepManager : MonoBehaviour
     public static GameStepManager Instance;
 
     public List<Vector2> playerHistory = new List<Vector2>();
-    public int MaxHistory = 7;
+    public int MaxHistory { get; set; } = 7;
 
     public event System.Action OnPlayerStep;
     public event System.Action OnRewind;
+    public event System.Action OnLose;
 
     private void Awake()
     {
@@ -29,6 +29,7 @@ public class GameStepManager : MonoBehaviour
     }
 
     public void TriggerRewind() { OnRewind?.Invoke(); }
+    public void TriggerTouch() { OnLose?.Invoke(); }
 
     public List<Vector2> GetHistorySnapshot()
     {

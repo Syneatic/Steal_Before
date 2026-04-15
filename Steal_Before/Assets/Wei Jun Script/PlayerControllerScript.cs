@@ -8,11 +8,11 @@ public class PlayerControllerScript : MonoBehaviour
     [Header("Movement Settings")]
     public Rigidbody2D rb;
     Vector2 moveDirection;
-    public static Vector2 pos = new Vector2(0.5f, 0.5f);
 
     public float checkDistance = 0.5f;
     public LayerMask collisionLayer;
     public LayerMask Triggers;
+    public LayerMask enemyLayer;
 
     //Button calling for PlayerController
     private InputSystem_Actions controls;
@@ -22,7 +22,7 @@ public class PlayerControllerScript : MonoBehaviour
 
     //Link list to store the data of the player movement (Vector2)
     private LinkedList<Vector2> movementHistory = new LinkedList<Vector2>();
-    private int maxNode = 6;
+    private int maxNode => GameStepManager.Instance.MaxHistory - 1;
 
     private List<Vector2> heldDirections = new List<Vector2>();
 
@@ -36,8 +36,6 @@ public class PlayerControllerScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        transform.position = pos;
-        rb.position = pos;
         movementHistory.AddLast(rb.position);
     }
 
@@ -113,10 +111,10 @@ public class PlayerControllerScript : MonoBehaviour
 
     private void MovePlayer(Vector2 dir)
     {
-        Vector2 targetPos = (Vector2)transform.position + dir;
+        Vector2 startPos = transform.position;
+        Vector2 targetPos = startPos + dir;
 
         Collider2D hit = Physics2D.OverlapCircle(targetPos, 0.3f, collisionLayer);
-
 
         if (hit != null)
         {
@@ -142,7 +140,7 @@ public class PlayerControllerScript : MonoBehaviour
             }
         }
 
-        Collider2D hitTrigger = Physics2D.OverlapCircle(targetPos, 0.3f, Triggers);
+        Collider2D hitTrigger = Physics2D.OverlapCircle(transform.position, 0.3f, Triggers);
 
         if (hitTrigger != null)
         {
@@ -154,6 +152,24 @@ public class PlayerControllerScript : MonoBehaviour
 
         // The Signal for the AI to move
         GameStepManager.Instance.RegisterStep(transform.position);
+
+        Physics2D.SyncTransforms();
+
+        // 2. CHECK: Did we land on the same tile?
+        Collider2D hitLand = Physics2D.OverlapCircle(transform.position, 0.3f, enemyLayer);
+
+        // 3. CHECK: Did we "Swap" places? (Did the enemy land where we just were?)
+        //Collider2D hitSwap = Physics2D.OverlapCircle(startPos, 0.3f, enemyLayer);
+
+        if (hitLand != null/* || hitSwap != null*/)
+        {
+            // LOSE LOGIC
+            Debug.Log("Collision");
+            if (hitLand.TryGetComponent(out EnemyPatrol enemy))
+            {
+                enemy.EnemyTouchPlayer();
+            }
+        }
     }
 
     private void RewindAbility(InputAction.CallbackContext context)
@@ -177,8 +193,8 @@ public class PlayerControllerScript : MonoBehaviour
         movementHistory.Clear();
         movementHistory.AddLast(rewindPos);
 
-        transform.position = rewindPos;
-        rb.position = rewindPos; //Update Rigidbody too to keep them in sync
+        //transform.position = rewindPos;
+        //rb.position = rewindPos; //Update Rigidbody too to keep them in sync
 
         if (AIMimicScript != null)
         {
