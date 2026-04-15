@@ -8,7 +8,6 @@ public class PlayerControllerScript : MonoBehaviour
     [Header("Movement Settings")]
     public Rigidbody2D rb;
     Vector2 moveDirection;
-    public static Vector2 pos = new Vector2(0.5f, 0.5f);
 
     public float checkDistance = 0.5f;
     public LayerMask collisionLayer;
@@ -37,8 +36,6 @@ public class PlayerControllerScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        transform.position = pos;
-        rb.position = pos;
         movementHistory.AddLast(rb.position);
     }
 

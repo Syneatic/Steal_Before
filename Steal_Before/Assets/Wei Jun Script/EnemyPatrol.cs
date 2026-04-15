@@ -72,11 +72,6 @@ public class EnemyPatrol : MonoBehaviour
             enemyHistory.RemoveAt(0);
             directionHistory.RemoveAt(0);
         }
-
-        if (Vector2.Distance(transform.position, PlayerControllerScript.pos) < 0.1f)
-        {
-            EnemyTouchPlayer();
-        }
     }
 
     private void RewindEnemy()
