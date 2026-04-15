@@ -5,6 +5,10 @@ using UnityEngine.InputSystem;
 
 public class PlayerControllerScript : MonoBehaviour
 {
+    [Header("Animation")]
+    public Animator animator;
+
+
     [Header("Movement Settings")]
     public Rigidbody2D rb;
     Vector2 moveDirection;
@@ -67,11 +71,35 @@ public class PlayerControllerScript : MonoBehaviour
 
     private Vector2 ReadDominantDirection(InputAction.CallbackContext context)
     {
+        if (context.canceled)
+        {
+            animator.SetInteger("State", 0);
+            return Vector2.zero;
+        }
+
         Vector2 value = context.action.ReadValue<Vector2>();
-        if (Mathf.Abs(value.x) > Mathf.Abs(value.y))
+
+        if (value.magnitude < 0.1f)
+        {
+            animator.SetInteger("State", 0); //Idle
+            Debug.Log("Current State: " + animator.GetInteger("State"));
+            return Vector2.zero;
+        }
+
+        animator.SetInteger("State", 1);
+
+        if (Mathf.Abs(value.x) > Mathf.Abs(value.y)) // L to R
+        {
+            animator.SetInteger("State", value.x > 0 ? 1 : 2); // 1 for Right, 2 for Left
+            Debug.Log("Current State: " + animator.GetInteger("State"));
             return new Vector2(Mathf.Sign(value.x), 0);
-        if (Mathf.Abs(value.y) > Mathf.Abs(value.x))
+        }
+        if (Mathf.Abs(value.y) > Mathf.Abs(value.x)) // Up to Down
+        {
+            animator.SetInteger("State", value.y > 0 ? 3 : 4); // 3 for Up, 4 for Down
+            Debug.Log("Current State: " + animator.GetInteger("State"));
             return new Vector2(0, Mathf.Sign(value.y));
+        }
         return Vector2.zero;
     }
 
