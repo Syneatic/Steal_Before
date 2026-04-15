@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
     public void StartGame()
     {
         MainMenu.SetActive(false);
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("Lvl1");
     }
 
     public void ToggleSettings()
