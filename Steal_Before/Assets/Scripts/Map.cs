@@ -33,8 +33,7 @@ public class Map : MonoBehaviour
     public bool refreshMap = false;
 
     [Header("Saved Map Data")]
-    // 1. THIS IS THE FIX. We changed [,] to [] and made it public.
-    // Unity will now permanently save this list to your Scene file!
+
     public FloorType[] mapGrid;
 
     // Private classes
@@ -46,12 +45,20 @@ public class Map : MonoBehaviour
     {
         if (!Application.isPlaying)
         {
-            // 2. We check if the size changed, OR if the array is empty, OR if you clicked the refresh checkbox
             if (width != lastWidth || height != lastHeight || mapGrid == null || mapGrid.Length != (width * height) || refreshMap)
             {
-                // We ONLY overwrite the data with the default generation if the physical dimensions changed.
-                // This protects your manual edits!
-                if (width != lastWidth || height != lastHeight || mapGrid == null || mapGrid.Length != (width * height))
+                // 1. If the map is completely blank, generate from scratch
+                if (mapGrid == null || mapGrid.Length == 0)
+                {
+                    GenerateMapData();
+                }
+                // 2. If the size changed, do a smart transfer!
+                else if (width != lastWidth || height != lastHeight)
+                {
+                    ResizeMapData(lastWidth, lastHeight);
+                }
+                // 3. Fallback for data corruption
+                else if (mapGrid.Length != (width * height))
                 {
                     GenerateMapData();
                 }
@@ -60,7 +67,7 @@ public class Map : MonoBehaviour
 
                 lastWidth = width;
                 lastHeight = height;
-                refreshMap = false; // Uncheck the box automatically
+                refreshMap = false;
             }
         }
     }
@@ -110,7 +117,6 @@ public class Map : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                // 4. Read from the 1D array using the exact same math formula
                 int index = x + (y * width);
                 FloorType tileID = mapGrid[index];
 
@@ -177,5 +183,63 @@ public class Map : MonoBehaviour
         {
             DestroyImmediate(oldHolder.gameObject);
         }
+    }
+
+    void ResizeMapData(int oldWidth, int oldHeight)
+    {
+        FloorType[] oldGrid = mapGrid;
+
+        mapGrid = new FloorType[width * height];
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                int newIndex = x + (y * width);
+
+                if ((x == 0 && y == 0) || (x == width - 1 && y == height - 1) || (x == 0 && y == height - 1) || (x == width - 1 && y == 0))
+                {
+                    mapGrid[newIndex] = FloorType.BaseCornerWall;
+                }
+                else if ((x == 0 && y <= height - 2) || (x == width - 1 && y <= height - 2))
+                {
+                    mapGrid[newIndex] = FloorType.VerticalWall;
+                }
+                else if ((x <= width - 1 && y == 0) || (x <= width - 1 && y == height - 1))
+                {
+                    mapGrid[newIndex] = FloorType.BaseHorizontalWall;
+                }
+                else
+                {
+                    if (x < oldWidth && y < oldHeight && oldGrid != null && oldGrid.Length == (oldWidth * oldHeight))
+                    {
+                        int oldIndex = x + (y * oldWidth);
+                        FloorType oldTile = oldGrid[oldIndex];
+                        if (IsBoundaryWall(oldTile))
+                        {
+                            mapGrid[newIndex] = FloorType.Tile;
+                        }
+                        else
+                        {
+                            // Otherwise, it's a custom painted tile. Keep it!
+                            mapGrid[newIndex] = oldTile;
+                        }
+                    }
+                    else
+                    {
+                        mapGrid[newIndex] = FloorType.Tile;
+                    }
+                }
+            }
+        }
+        Debug.Log($"Map resized! Safely transferred data from {oldWidth}x{oldHeight} to {width}x{height}.");
+    }
+
+    // A small helper function to easily identify if an enum is a system boundary
+    bool IsBoundaryWall(FloorType type)
+    {
+        return type == FloorType.BaseCornerWall ||
+               type == FloorType.VerticalWall ||
+               type == FloorType.BaseHorizontalWall;
     }
 }
