@@ -5,9 +5,11 @@ public class TriggerScript : MonoBehaviour
 {
     public bool IsActivated { get; private set; } = false;
 
-    [SerializeField] private Color activatedColor = Color.red;
-    [SerializeField] private Color idleColor = Color.green;
-    [SerializeField] private DoorV2Script ObjectInteract;
+    //[SerializeField] private Color activatedColor = Color.red;
+    //[SerializeField] private Color idleColor = Color.green;
+    public List<DoorV2Script> ObjectInteract = new List<DoorV2Script>();
+
+    private Animator animator;
 
     public List<bool> buttonHistory = new List<bool>();
 
@@ -18,8 +20,10 @@ public class TriggerScript : MonoBehaviour
 
     void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.color = idleColor;
+        //spriteRenderer = GetComponent<SpriteRenderer>();
+        //spriteRenderer.color = idleColor;
+
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -71,12 +75,18 @@ public class TriggerScript : MonoBehaviour
     public void PushButton()
     {
         IsActivated = true;
-        spriteRenderer.color = activatedColor;
+        //spriteRenderer.color = activatedColor;
+
+        if (animator != null) animator.SetBool("isPressed", true);
+
         currentStepsleft = stepToStayActive;
 
         Debug.Log("Button is pressed");
 
-        ObjectInteract.CheckButtonLogic();
+        for (var num = 0; num < ObjectInteract.Count; num++)
+        {
+            ObjectInteract[num].CheckButtonLogic();
+        }
     }
 
     public void DeactivateButton()
@@ -84,12 +94,15 @@ public class TriggerScript : MonoBehaviour
         IsActivated = false;
         currentStepsleft = 0;
 
-        if (spriteRenderer != null) spriteRenderer.color = idleColor;
+        if (animator != null) animator.SetBool("isPressed", false);
 
         // Notify the door to check its conditions
         if (ObjectInteract != null)
         {
-            ObjectInteract.CheckButtonLogic();
+            for (var num = 0; num < ObjectInteract.Count; num++)
+            {
+                ObjectInteract[num].CheckButtonLogic();
+            }
         }
 
         Debug.Log("Button has turn back on");
@@ -113,8 +126,5 @@ public class TriggerScript : MonoBehaviour
         }
 
         PushButton();
-
-        // Now update the color based on the new isPressed value
-        spriteRenderer.color = IsActivated ? Color.red : Color.green;
     }
 }
