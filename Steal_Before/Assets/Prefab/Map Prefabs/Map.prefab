@@ -95,7 +95,13 @@ MonoBehaviour:
   - {fileID: 5684568471263868781, guid: f0cf9e70ec411b844837c36d3105ec27, type: 3}
   - {fileID: 7808576112801850178, guid: cfc1f3994ed7a8d44b64a379559aa059, type: 3}
   - {fileID: 4641267193976851736, guid: 72c83efea0ca2da458ec15096006f4b0, type: 3}
-  obstaclePrefabs: []
+  obstaclePrefabs:
+  - {fileID: 0}
+  - {fileID: 3836053045990338938, guid: 1f182b5f9c55b5841a0a0499cec36def, type: 3}
+  - {fileID: 4924437451528604359, guid: 8d7712002f14f824ea47ccc1f13c7efa, type: 3}
+  - {fileID: 1989498791260658942, guid: 7d8d98f99e564fa48837e49813f34d53, type: 3}
+  - {fileID: 6369872364449709989, guid: 42334840da9a5e4448acbb7c34a47789, type: 3}
+  - {fileID: 7376265067306376729, guid: 39fb0044960015e44a41ae4c7add0bc0, type: 3}
   refreshMap: 0
   mapGrid: 
   obstacleGrid: 

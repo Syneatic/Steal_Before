@@ -24,12 +24,11 @@ public enum ObstacleType
 {
     None,                       // Not an Obstacle
     //Player,                   // Player
+    Goal,                       // Goal
     Door,                       // Door
     Button,                     // Button
     Enemy,                      // AI
     Laser                       // Laser
-    Goal                        // Goal
-
 }
 
 [System.Serializable]
