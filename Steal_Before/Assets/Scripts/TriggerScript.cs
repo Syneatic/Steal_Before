@@ -80,7 +80,7 @@ public class TriggerScript : MonoBehaviour
         if (animator != null) animator.SetBool("isPressed", true);
 
         currentStepsleft = stepToStayActive;
-
+        AudioManager.Instance.PlaySound(AudioManager.Instance.platePress, false);
         Debug.Log("Button is pressed");
 
         for (var num = 0; num < ObjectInteract.Count; num++)
@@ -95,7 +95,7 @@ public class TriggerScript : MonoBehaviour
         currentStepsleft = 0;
 
         if (animator != null) animator.SetBool("isPressed", false);
-
+        AudioManager.Instance.PlaySound(AudioManager.Instance.plateRelease, false);
         // Notify the door to check its conditions
         if (ObjectInteract != null)
         {

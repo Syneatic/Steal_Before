@@ -1,0 +1,48 @@
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class AudioManager : MonoBehaviour
+{
+    public static AudioManager Instance;
+
+    [Header("Speakers")]
+    public AudioSource menuSource;
+    public AudioSource gameplaySource;
+
+    [Header("Menu Sounds")]
+    public AudioClip selectSound;
+    public AudioClip startButtonSound;
+
+    [Header("Gameplay Sounds")]
+    public AudioClip moveSound;
+    public AudioClip rewindSound;
+    public AudioClip deathSound;
+    public AudioClip platePress;
+    public AudioClip plateRelease;
+
+    void Awake()
+    {
+        // This is the "Ghost" logic:
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject); // Keeps it alive between scenes
+        }
+        else
+        {
+            Destroy(gameObject); // Prevents having two managers at once
+        }
+    }
+
+    // A simple function to play any sound through any source
+    public void PlaySound(AudioClip clip, bool isMenuSound)
+    {
+        if (clip == null) return;
+
+        if (isMenuSound)
+            menuSource.PlayOneShot(clip);
+        else
+            gameplaySource.PlayOneShot(clip);
+    }
+}

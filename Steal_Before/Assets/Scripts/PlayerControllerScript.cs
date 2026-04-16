@@ -171,6 +171,7 @@ public class PlayerControllerScript : MonoBehaviour
             }
         }
 
+        AudioManager.Instance.PlaySound(AudioManager.Instance.moveSound, false);
         UpdatePendantUI();
 
         Collider2D hitTrigger = Physics2D.OverlapCircle(transform.position, 0.3f, Triggers);
@@ -217,6 +218,7 @@ public class PlayerControllerScript : MonoBehaviour
             return;
         }
 
+        AudioManager.Instance.PlaySound(AudioManager.Instance.rewindSound, false);
         GameStepManager.Instance.TriggerRewind();
 
         // Start the mimic behavior only when E is pressed
