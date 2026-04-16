@@ -32,6 +32,15 @@ public enum ObstacleType
 
 }
 
+[System.Serializable]
+public struct ObstaclePlacement
+{
+    public int x;
+    public int y;
+    public ObstacleType type;
+}
+
+
 [ExecuteAlways]
 public class Map : MonoBehaviour
 {
@@ -45,10 +54,11 @@ public class Map : MonoBehaviour
     [Header("Editor Tools")]
     [Tooltip("Check this box to manually redraw the map after changing a tile in the array below.")]
     public bool refreshMap = false;
+    public bool clearMap = false;
 
     [Header("Saved Map Data")]
     public FloorType[] mapGrid;
-    public ObstacleType[] obstacleGrid;
+    public List<ObstaclePlacement> activeObstacles = new List<ObstaclePlacement>();
 
     // Private classes
     [SerializeField, HideInInspector] private int lastWidth;
@@ -60,10 +70,10 @@ public class Map : MonoBehaviour
     {
         if (!Application.isPlaying)
         {
-            if (width != lastWidth || height != lastHeight || mapGrid == null || obstacleGrid == null || mapGrid.Length != (width * height) || obstacleGrid.Length != (width * height) || refreshMap)
+            if (width != lastWidth || height != lastHeight || mapGrid == null || mapGrid.Length != (width * height) || refreshMap)
             {
                 // 1. If the map is completely blank, generate from scratch
-                if (mapGrid == null || mapGrid.Length == 0 || obstacleGrid == null || obstacleGrid.Length == 0)
+                if (mapGrid == null || mapGrid.Length == 0)
                 {
                     GenerateMapData();
                 }
@@ -77,12 +87,23 @@ public class Map : MonoBehaviour
                 {
                     GenerateMapData();
                 }
+                else if (refreshMap)
+                {
+                    ResizeMapData(width, height);
+                }
 
                 DrawMap();
 
                 lastWidth = width;
                 lastHeight = height;
                 refreshMap = false;
+            }
+
+            if(clearMap)
+            {
+                GenerateMapData();
+                DrawMap();
+                clearMap = false;
             }
         }
     }
@@ -91,7 +112,8 @@ public class Map : MonoBehaviour
     {
         // Initialize the 1D array with total area (width * height)
         mapGrid = new FloorType[width * height];
-        obstacleGrid = new ObstacleType[width * height];
+
+        activeObstacles.Clear();
 
         for (int i = 0; i < width; ++i)
         {
@@ -115,12 +137,17 @@ public class Map : MonoBehaviour
                 else if ((j > 0 && j < height - 1))
                 {
                     mapGrid[index] = FloorType.Tile;
-                }
+                    ObstaclePlacement emptySlot = new ObstaclePlacement();
+                    emptySlot.x = i;
+                    emptySlot.y = j;
+                    emptySlot.type = ObstacleType.None;
 
-                obstacleGrid[index] = ObstacleType.None;
+                    activeObstacles.Add(emptySlot);
+                }
             }
         }
-        Debug.Log("mapArray has a total of " + obstacleGrid.Length + " stored data");
+
+        Debug.Log("Map Data has been generated");
     }
 
     void DrawMap()
@@ -141,7 +168,6 @@ public class Map : MonoBehaviour
             {
                 int index = x + (y * width);
                 FloorType tileID = mapGrid[index];
-                ObstacleType obsID = obstacleGrid[index];
 
                 Vector3 spawnPosition = new Vector3(x * tileSize, y * tileSize, 0);
 
@@ -193,17 +219,33 @@ public class Map : MonoBehaviour
                     {
                         spawnedWall = Instantiate(tilePrefabs[((int)tileID)], spawnPosition, Quaternion.identity, boundaryHolder);
                         spawnedWall.hideFlags = HideFlags.None;
-                    }
-                 
-                    if (obsID == ObstacleType.None)
+                    }                    
+                }
+            }
+        }
+
+        foreach (ObstaclePlacement obs in activeObstacles)
+        {
+            // 1. Safety check: Ensure the obstacle is inside the map boundaries!
+            if (obs.x >= 0 && obs.x < width && obs.y >= 0 && obs.y < height && obs.type != ObstacleType.None)
+            {
+                // 2. Safety check: Ensure it's sitting on a valid floor tile
+                int floorIndex = obs.x + (obs.y * width);
+                if (CanPlaceObstacle(mapGrid[floorIndex]))
+                {
+                    // Calculate position
+                    Vector3 spawnPosition = new Vector3(obs.x * tileSize, obs.y * tileSize, 0.0f);
+
+                    // Spawn the prefab
+                    if (((int)obs.type) < obstaclePrefabs.Length && obstaclePrefabs[((int)obs.type)] != null)
                     {
-                        if (((int)obsID) < obstaclePrefabs.Length && obstaclePrefabs[((int)obsID)] != null)
-                        {
-                            GameObject spawnedObs = Instantiate(obstaclePrefabs[((int)obsID)], spawnPosition, Quaternion.identity, obstacleHolder);
-                            spawnedObs.hideFlags = HideFlags.None; // Kept editable so you can select them
-                        }
+                        GameObject spawnedObs = Instantiate(obstaclePrefabs[((int)obs.type)], spawnPosition, Quaternion.identity, obstacleHolder);
+                        spawnedObs.hideFlags = HideFlags.None;
                     }
-                    
+                }
+                else
+                {
+                    Debug.LogWarning($"Attempted to spawn {obs.type} at {obs.x},{obs.y}, but there is a wall there!");
                 }
             }
         }
@@ -227,10 +269,9 @@ public class Map : MonoBehaviour
     void ResizeMapData(int oldWidth, int oldHeight)
     {
         FloorType[] oldGrid = mapGrid;
-        ObstacleType[] oldObstacles = obstacleGrid; // Save old obstacles
-
         mapGrid = new FloorType[width * height];
-        obstacleGrid = new ObstacleType[width * height]; // New blank canvas
+
+        List<ObstaclePlacement> newObstacles = new List<ObstaclePlacement>();
 
         for (int x = 0; x < width; x++)
         {
@@ -259,33 +300,43 @@ public class Map : MonoBehaviour
 
                         if (IsBoundaryWall(oldTile))
                         {
-                            mapGrid[newIndex] = FloorType.Tile;
+                            mapGrid[newIndex] = FloorType.Tile; // Convert old boundary to floor
                         }
                         else
                         {
-                            mapGrid[newIndex] = oldTile;
-                        }
-
-                        if (CanPlaceObstacle(mapGrid[newIndex]))
-                        {
-                            if (oldObstacles != null && oldObstacles.Length == (oldWidth * oldHeight))
-                            {
-                                obstacleGrid[newIndex] = oldObstacles[oldIndex];
-                            }
-                        }
-                        else
-                        {
-                            obstacleGrid[newIndex] = ObstacleType.None;
+                            mapGrid[newIndex] = oldTile; // Keep custom painted floors
                         }
                     }
                     else
                     {
                         mapGrid[newIndex] = FloorType.Tile;
-                        obstacleGrid[newIndex] = ObstacleType.None;
+                    }
+
+                    if (CanPlaceObstacle(mapGrid[newIndex]))
+                    {
+                        ObstacleType savedType = ObstacleType.None;
+                        foreach (ObstaclePlacement oldObs in activeObstacles)
+                        {
+                            if (oldObs.x == x && oldObs.y == y)
+                            {
+                                savedType = oldObs.type;
+                                break;
+                            }
+                        }
+
+                        ObstaclePlacement slot = new ObstaclePlacement();
+                        slot.x = x;
+                        slot.y = y;
+                        slot.type = savedType;
+
+                        newObstacles.Add(slot);
                     }
                 }
             }
         }
+
+        activeObstacles = newObstacles;
+
         Debug.Log($"Map resized! Safely transferred data from {oldWidth}x{oldHeight} to {width}x{height}.");
     }
 
