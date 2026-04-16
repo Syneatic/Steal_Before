@@ -48,7 +48,7 @@ public class GameStepManager : MonoBehaviour
 
     public void GoalReach()
     {
-        if (SceneManager.GetActiveScene().buildIndex < 8)
+        if (SceneManager.GetActiveScene().buildIndex < 7)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
             playerHistory.Clear();

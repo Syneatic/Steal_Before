@@ -23,18 +23,7 @@ public class AudioManager : MonoBehaviour
 
     void Awake()
     {
-        // This is the "Ghost" logic:
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); // Keeps it alive between scenes
-        }
-        else
-        {
-            Destroy(gameObject); // Prevents having two managers at once
-        }
-
-
+        Instance = this;
     }
 
     // A simple function to play any sound through any source
