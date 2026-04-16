@@ -21,6 +21,16 @@ public enum FloorType
     Obstacle                    // Obstacle
 }
 
+public enum ObstacleType
+{
+    None,                       // Not an Obstacle
+    Player,                     // Player
+    Laser,                      // Laser
+    Enemy,                      // AI
+    Door,                       // Door
+    Button                      // Button
+
+}
 
 [ExecuteAlways]
 public class Map : MonoBehaviour
@@ -30,20 +40,21 @@ public class Map : MonoBehaviour
     public int height;
     public float tileSize = 1f;
     public GameObject[] tilePrefabs;
-    public Transform[] objstaclePos;
+    public GameObject[] obstaclePrefabs;
 
     [Header("Editor Tools")]
     [Tooltip("Check this box to manually redraw the map after changing a tile in the array below.")]
     public bool refreshMap = false;
 
     [Header("Saved Map Data")]
-
     public FloorType[] mapGrid;
+    public ObstacleType[] obstacleGrid;
 
     // Private classes
     [SerializeField, HideInInspector] private int lastWidth;
     [SerializeField, HideInInspector] private int lastHeight;
     private Transform boundaryHolder;
+    private Transform obstacleHolder;
 
     void Update()
     {
@@ -80,6 +91,7 @@ public class Map : MonoBehaviour
     {
         // Initialize the 1D array with total area (width * height)
         mapGrid = new FloorType[width * height];
+        obstacleGrid = new ObstacleType[width * height];
 
         for (int i = 0; i < width; ++i)
         {
@@ -117,12 +129,17 @@ public class Map : MonoBehaviour
         holderObj.transform.parent = this.transform;
         boundaryHolder = holderObj.transform;
 
+        GameObject obsObj = new GameObject("GeneratedObstacles");
+        obsObj.transform.parent = this.transform;
+        obstacleHolder = obsObj.transform;
+
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
                 int index = x + (y * width);
                 FloorType tileID = mapGrid[index];
+                ObstacleType obsID = obstacleGrid[index];
 
                 Vector3 spawnPosition = new Vector3(x * tileSize, y * tileSize, 0);
 
@@ -176,6 +193,17 @@ public class Map : MonoBehaviour
                         spawnedWall.hideFlags = HideFlags.None;
                     }
                 }
+
+                if (obsID != ObstacleType.None)
+                {
+                    if (((int)obsID) < obstaclePrefabs.Length && obstaclePrefabs[((int)obsID)] != null)
+                    {
+                        // To ensure obstacles appear on top in 2D, you might need a slight Z-offset 
+                        // or ensure the Prefab's SpriteRenderer sorting order is set higher than the floor.
+                        GameObject spawnedObs = Instantiate(obstaclePrefabs[((int)obsID)], spawnPosition, Quaternion.identity, obstacleHolder);
+                        spawnedObs.hideFlags = HideFlags.None; // Kept editable so you can select them
+                    }
+                }
             }
         }
     }
@@ -187,13 +215,21 @@ public class Map : MonoBehaviour
         {
             DestroyImmediate(oldHolder.gameObject);
         }
+
+        Transform oldObsHolder = transform.Find("GeneratedObstacles");
+        if (oldObsHolder != null)
+        {
+            DestroyImmediate(oldObsHolder.gameObject);
+        }
     }
 
     void ResizeMapData(int oldWidth, int oldHeight)
     {
         FloorType[] oldGrid = mapGrid;
+        ObstacleType[] oldObstacles = obstacleGrid; // Save old obstacles
 
         mapGrid = new FloorType[width * height];
+        obstacleGrid = new ObstacleType[width * height]; // New blank canvas
 
         for (int x = 0; x < width; x++)
         {
@@ -222,16 +258,22 @@ public class Map : MonoBehaviour
                         if (IsBoundaryWall(oldTile))
                         {
                             mapGrid[newIndex] = FloorType.Tile;
+                            obstacleGrid[newIndex] = ObstacleType.None; // Ensure wall replaces any obstacle
                         }
                         else
                         {
-                            // Otherwise, it's a custom painted tile. Keep it!
                             mapGrid[newIndex] = oldTile;
+                            // Transfer the obstacle safely
+                            if (oldObstacles != null && oldObstacles.Length == (oldWidth * oldHeight))
+                            {
+                                obstacleGrid[newIndex] = oldObstacles[oldIndex];
+                            }
                         }
                     }
                     else
                     {
                         mapGrid[newIndex] = FloorType.Tile;
+                        obstacleGrid[newIndex] = ObstacleType.None;
                     }
                 }
             }
@@ -239,7 +281,6 @@ public class Map : MonoBehaviour
         Debug.Log($"Map resized! Safely transferred data from {oldWidth}x{oldHeight} to {width}x{height}.");
     }
 
-    // A small helper function to easily identify if an enum is a system boundary
     bool IsBoundaryWall(FloorType type)
     {
         return type == FloorType.BaseCornerWall ||
