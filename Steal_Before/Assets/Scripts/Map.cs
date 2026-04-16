@@ -17,6 +17,7 @@ public enum FloorType
     TopHorizontalWall,          // Top HWall
     VerticalEnd,                // Vertical End
     HorizontalEnd,              // Horizontal End
+    MiddleL,
     Obstacle                    // Obstacle
 }
 
@@ -24,7 +25,8 @@ public enum ObstacleType
 { 
     None,
     Laser,                      // Laser
-    Enemy                       // Enemy
+    Enemy,                      // Enemy
+    Door
 }
 
 
