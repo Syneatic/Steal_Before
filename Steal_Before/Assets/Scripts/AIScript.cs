@@ -66,7 +66,20 @@ public class AIScript : MonoBehaviour
 
     private void OnEnable()
     {
+        // Wait for the manager to exist before subscribing
+        StopAllCoroutines();
+        StartCoroutine(WaitToSubscribe());
+    }
+
+    private IEnumerator WaitToSubscribe()
+    {
+        while (GameStepManager.Instance == null)
+        {
+            yield return null;
+        }
+
         GameStepManager.Instance.OnPlayerStep += PlayerMove;
+        Debug.Log(gameObject.name + " (AI) Subscribed to Step Manager");
     }
 
     private void OnDisable()

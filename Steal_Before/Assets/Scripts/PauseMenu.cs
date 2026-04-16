@@ -24,13 +24,11 @@ public class PauseMenu : MonoBehaviour
         {
             if (GamePaused)
             {
-                Resume();
-                player.controls.Enable();
+                Resume(); 
             }
             else
             {
                 Pause();
-                player.controls.Disable();
             }
         }
     }
@@ -41,6 +39,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f; // Resumes normal game speed
         GamePaused = false;
+        player.controls.Enable();
     }
 
     void Pause()
@@ -48,6 +47,7 @@ public class PauseMenu : MonoBehaviour
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f; // Freezes physics and timers
         GamePaused = true;
+        player.controls.Disable();
     }
 
     public void RestartLevel()

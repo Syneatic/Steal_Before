@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,8 +29,21 @@ public class TriggerScript : MonoBehaviour
 
     private void OnEnable()
     {
-        // If the manager is already ready, subscribe now
+        StopAllCoroutines();
+        StartCoroutine(WaitToSubscribe());
+    }
+
+    IEnumerator WaitToSubscribe()
+    {
+        // Keep looking for the manager until it exists
+        while (GameStepManager.Instance == null)
+        {
+            yield return null; // Wait 1 frame
+        }
+
+        // Now that we found it, subscribe!
         Subscribe();
+        Debug.Log(gameObject.name + " successfully hooked into the Step Manager!");
     }
 
     private void OnDisable()
