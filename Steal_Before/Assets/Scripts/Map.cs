@@ -56,7 +56,8 @@ public class Map : MonoBehaviour
     //public bool clearMap = false;
 
     [Tooltip("Turn this on to see the Array Index and X,Y coordinates floating over the tiles!")]
-    public bool showDebugText = false;
+    public bool showMapDebugText = false;
+    public bool showObstacleDebugText = false;
 
     [Header("Saved Map Data")]
     public FloorType[] mapGrid;
@@ -358,29 +359,43 @@ public class Map : MonoBehaviour
     void OnDrawGizmos()
     {
         // Only draw the text if the checkbox is ticked and the map exists!
-        if (showDebugText && mapGrid != null && mapGrid.Length > 0)
+        if (showMapDebugText && mapGrid != null && mapGrid.Length > 0)
         {
-            // Set the text style (make it visible, maybe centered, colored)
-            GUIStyle textStyle = new GUIStyle();
-            textStyle.normal.textColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
-            textStyle.fontSize = 14;
-            textStyle.alignment = TextAnchor.MiddleCenter;
+            GUIStyle floorStyle = new GUIStyle();
+            floorStyle.normal.textColor = Color.black;
+            floorStyle.fontStyle = FontStyle.Bold;
+            floorStyle.fontSize = 14;
+            floorStyle.alignment = TextAnchor.MiddleCenter;
 
             for (int x = 0; x < width; x++)
             {
                 for (int y = 0; y < height; y++)
                 {
                     int index = x + (y * width);
-
-                    // Calculate the exact center of this tile
                     Vector3 tileCenter = new Vector3(x * tileSize, y * tileSize, 0);
-
-                    // Create the text string we want to show
                     string debugInfo = $"[{index}]";
-
-                    // Draw the text floating in the Scene View!
-                    UnityEditor.Handles.Label(tileCenter, debugInfo, textStyle);
+                    UnityEditor.Handles.Label(tileCenter, debugInfo, floorStyle);
                 }
+            }
+        }
+
+        if (showObstacleDebugText && activeObstacles != null)
+        {
+            GUIStyle obsStyle = new GUIStyle();
+            obsStyle.normal.textColor = Color.black;
+            obsStyle.fontStyle = FontStyle.Bold;
+            obsStyle.fontSize = 14;
+            obsStyle.alignment = TextAnchor.LowerCenter;
+
+            for (int i = 0; i < activeObstacles.Count; i++)
+            {
+                ObstaclePlacement obs = activeObstacles[i];
+
+                
+                Vector3 obsCenter = new Vector3(obs.x * tileSize, (obs.y * tileSize) - 0.2f, -1f);
+                string obsInfo = $"[{i}]";
+                UnityEditor.Handles.Label(obsCenter, obsInfo, obsStyle);
+                
             }
         }
     }
