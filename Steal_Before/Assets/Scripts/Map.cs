@@ -17,8 +17,7 @@ public enum FloorType
     TopHorizontalWall,          // Top HWall
     VerticalEnd,                // Vertical End
     HorizontalEnd,              // Horizontal End
-    MiddleL,
-    Obstacle                    // Obstacle
+    MiddleL,                    
 }
 
 public enum ObstacleType
@@ -29,6 +28,8 @@ public enum ObstacleType
     Button,                     // Button
     Enemy,                      // AI
     Laser                       // Laser
+    Goal                        // Goal
+
 }
 
 [ExecuteAlways]
@@ -59,10 +60,10 @@ public class Map : MonoBehaviour
     {
         if (!Application.isPlaying)
         {
-            if (width != lastWidth || height != lastHeight || mapGrid == null || mapGrid.Length != (width * height) || refreshMap)
+            if (width != lastWidth || height != lastHeight || mapGrid == null || obstacleGrid == null || mapGrid.Length != (width * height) || obstacleGrid.Length != (width * height) || refreshMap)
             {
                 // 1. If the map is completely blank, generate from scratch
-                if (mapGrid == null || mapGrid.Length == 0)
+                if (mapGrid == null || mapGrid.Length == 0 || obstacleGrid == null || obstacleGrid.Length == 0)
                 {
                     GenerateMapData();
                 }
@@ -115,9 +116,11 @@ public class Map : MonoBehaviour
                 {
                     mapGrid[index] = FloorType.Tile;
                 }
+
+                obstacleGrid[index] = ObstacleType.None;
             }
         }
-        Debug.Log("mapArray has a total of " + mapGrid.Length + " stored data");
+        Debug.Log("mapArray has a total of " + obstacleGrid.Length + " stored data");
     }
 
     void DrawMap()
@@ -191,17 +194,16 @@ public class Map : MonoBehaviour
                         spawnedWall = Instantiate(tilePrefabs[((int)tileID)], spawnPosition, Quaternion.identity, boundaryHolder);
                         spawnedWall.hideFlags = HideFlags.None;
                     }
-                }
-
-                if (obsID != ObstacleType.None)
-                {
-                    if (((int)obsID) < obstaclePrefabs.Length && obstaclePrefabs[((int)obsID)] != null)
+                 
+                    if (obsID == ObstacleType.None)
                     {
-                        // To ensure obstacles appear on top in 2D, you might need a slight Z-offset 
-                        // or ensure the Prefab's SpriteRenderer sorting order is set higher than the floor.
-                        GameObject spawnedObs = Instantiate(obstaclePrefabs[((int)obsID)], spawnPosition, Quaternion.identity, obstacleHolder);
-                        spawnedObs.hideFlags = HideFlags.None; // Kept editable so you can select them
+                        if (((int)obsID) < obstaclePrefabs.Length && obstaclePrefabs[((int)obsID)] != null)
+                        {
+                            GameObject spawnedObs = Instantiate(obstaclePrefabs[((int)obsID)], spawnPosition, Quaternion.identity, obstacleHolder);
+                            spawnedObs.hideFlags = HideFlags.None; // Kept editable so you can select them
+                        }
                     }
+                    
                 }
             }
         }
@@ -254,19 +256,26 @@ public class Map : MonoBehaviour
                     {
                         int oldIndex = x + (y * oldWidth);
                         FloorType oldTile = oldGrid[oldIndex];
+
                         if (IsBoundaryWall(oldTile))
                         {
                             mapGrid[newIndex] = FloorType.Tile;
-                            obstacleGrid[newIndex] = ObstacleType.None; // Ensure wall replaces any obstacle
                         }
                         else
                         {
                             mapGrid[newIndex] = oldTile;
-                            // Transfer the obstacle safely
+                        }
+
+                        if (CanPlaceObstacle(mapGrid[newIndex]))
+                        {
                             if (oldObstacles != null && oldObstacles.Length == (oldWidth * oldHeight))
                             {
                                 obstacleGrid[newIndex] = oldObstacles[oldIndex];
                             }
+                        }
+                        else
+                        {
+                            obstacleGrid[newIndex] = ObstacleType.None;
                         }
                     }
                     else
@@ -285,5 +294,10 @@ public class Map : MonoBehaviour
         return type == FloorType.BaseCornerWall ||
                type == FloorType.VerticalWall ||
                type == FloorType.BaseHorizontalWall;
+    }
+
+    public bool CanPlaceObstacle(FloorType floorType)
+    {
+        return floorType == FloorType.Tile;
     }
 }
