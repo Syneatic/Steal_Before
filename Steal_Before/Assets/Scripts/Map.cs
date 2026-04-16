@@ -17,20 +17,16 @@ public enum FloorType
     TopHorizontalWall,          // Top HWall
     VerticalEnd,                // Vertical End
     HorizontalEnd,              // Horizontal End
-    MiddleL,
     Obstacle                    // Obstacle
 }
 
 public enum ObstacleType
-{
-    None,                       // Not an Obstacle
-    Player,                     // Player
+{ 
+    None,
     Laser,                      // Laser
-    Enemy,                      // AI
-    Door,                       // Door
-    Button                      // Button
-
+    Enemy                       // Enemy
 }
+
 
 [ExecuteAlways]
 public class Map : MonoBehaviour
@@ -198,10 +194,8 @@ public class Map : MonoBehaviour
                 {
                     if (((int)obsID) < obstaclePrefabs.Length && obstaclePrefabs[((int)obsID)] != null)
                     {
-                        // To ensure obstacles appear on top in 2D, you might need a slight Z-offset 
-                        // or ensure the Prefab's SpriteRenderer sorting order is set higher than the floor.
                         GameObject spawnedObs = Instantiate(obstaclePrefabs[((int)obsID)], spawnPosition, Quaternion.identity, obstacleHolder);
-                        spawnedObs.hideFlags = HideFlags.None; // Kept editable so you can select them
+                        spawnedObs.hideFlags = HideFlags.None;
                     }
                 }
             }

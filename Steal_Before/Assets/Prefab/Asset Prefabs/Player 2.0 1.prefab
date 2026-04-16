@@ -109,7 +109,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerControllerScript
   animator: {fileID: 8987400058791946726}
-  GPuiManager: {fileID: 0}
   rb: {fileID: 0}
   checkDistance: 0.5
   collisionLayer:
