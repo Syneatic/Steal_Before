@@ -24,12 +24,11 @@ public enum FloorType
 public enum ObstacleType
 {
     None,                       // Not an Obstacle
-    Player,                     // Player
-    Laser,                      // Laser
-    Enemy,                      // AI
+    //Player,                   // Player
     Door,                       // Door
-    Button                      // Button
-
+    Button,                     // Button
+    Enemy,                      // AI
+    Laser                       // Laser
 }
 
 [ExecuteAlways]
