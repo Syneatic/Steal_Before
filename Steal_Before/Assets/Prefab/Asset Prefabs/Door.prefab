@@ -152,3 +152,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorV2Script
   Triggers: []
+  interactable: 0
