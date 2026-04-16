@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5570001444655696216}
   - component: {fileID: 6316861982986269903}
   - component: {fileID: 4731590755879040914}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: T Block Verti
   m_TagString: Untagged
   m_Icon: {fileID: 0}
