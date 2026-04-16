@@ -43,7 +43,15 @@ public class GameStepManager : MonoBehaviour
 
     public void GoalReach()
     {
-        OnWin?.Invoke();
+        if (SceneManager.GetActiveScene().buildIndex < 8)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        else
+        {
+            SceneManager.LoadScene(0);
+        }
+            OnWin?.Invoke();
     }
 
     public List<Vector2> GetHistorySnapshot()
