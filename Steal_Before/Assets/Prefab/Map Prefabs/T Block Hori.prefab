@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4039755420636710430}
   - component: {fileID: 7605632958282436907}
   - component: {fileID: 7103895454903201624}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: T Block Hori
   m_TagString: Untagged
   m_Icon: {fileID: 0}
