@@ -10,12 +10,22 @@ public class UIManager : MonoBehaviour
     public GameObject MainMenu;
     public GameObject LevelSelect;
 
+    private bool isMuted = false; //audio
     void Start()
     {
         MainMenu.SetActive(true);
         CreditsPage.SetActive(false);
         SettingsPage.SetActive(false);
         LevelSelect.SetActive(false);
+
+        isMuted = AudioListener.pause;
+    }
+
+    public void ToggleMute()
+    {
+        isMuted = !isMuted;
+        AudioListener.pause = isMuted;
+        ButtonSound();
     }
 
     public void ToggleStartGame()

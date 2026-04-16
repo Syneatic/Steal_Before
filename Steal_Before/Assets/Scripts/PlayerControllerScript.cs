@@ -23,7 +23,7 @@ public class PlayerControllerScript : MonoBehaviour
     public LayerMask enemyLayer;
 
     //Button calling for PlayerController
-    private InputSystem_Actions controls;
+    public InputSystem_Actions controls;
 
     //Call the script of AI
     public AIScript AIMimicScript;

@@ -1,24 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
-using UnityEngine.UI; // Required if you want to change the button icon
-
-//Audio
-public class VolumeControl : MonoBehaviour
-{
-    private bool isMuted = false;
-
-    public void ToggleMute()
-    {
-        isMuted = !isMuted;
-
-        // This silences all AudioSources in the entire game
-        AudioListener.pause = isMuted;
-
-        // Debug to verify in console
-        Debug.Log(isMuted ? "Game Muted" : "Game Unmuted");
-    }
-}
 
 public class PauseMenu : MonoBehaviour
 {
@@ -27,6 +9,12 @@ public class PauseMenu : MonoBehaviour
     static bool GamePaused = false;
 
     public GameObject pauseMenuUI;
+    public PlayerControllerScript player;
+
+    void Start()
+    {
+        player = Object.FindAnyObjectByType<PlayerControllerScript>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -37,10 +25,12 @@ public class PauseMenu : MonoBehaviour
             if (GamePaused)
             {
                 Resume();
+                player.controls.Enable();
             }
             else
             {
                 Pause();
+                player.controls.Disable();
             }
         }
     }

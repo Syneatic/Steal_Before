@@ -10182,6 +10182,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 342074519314887277, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1810910156}
+    - target: {fileID: 342074519314887277, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RestartLevel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6304693441120698797, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1810910156}
+    - target: {fileID: 6304693441120698797, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
     - target: {fileID: 7058582198368322987, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -10261,6 +10277,14 @@ PrefabInstance:
     - target: {fileID: 7058582198368322987, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8289937904251991670, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1810910156}
+    - target: {fileID: 8289937904251991670, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: LoadMenu
       objectReference: {fileID: 0}
     - target: {fileID: 9160987919092843540, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
       propertyPath: m_Name
@@ -17332,6 +17356,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9784f5faa322ff4bbcd312f88fd7f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameplayUIManager
+--- !u!114 &1810910156 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2543332836001374531, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+  m_PrefabInstance: {fileID: 1810910154}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 647c29fc53e83374c9fc140aa4d9ce86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
 --- !u!1 &1811389770
 GameObject:
   m_ObjectHideFlags: 10
