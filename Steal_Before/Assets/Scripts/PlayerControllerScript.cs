@@ -11,6 +11,9 @@ public class PlayerControllerScript : MonoBehaviour
     [Header("UI Reference")]
     [SerializeField] private GameplayUIManager GPuiManager;
 
+    [SerializeField] private float maxHealth = 3f;
+    [SerializeField] private AudioClip movingSound;
+
 
     [Header("Movement Settings")]
     public Rigidbody2D rb;
