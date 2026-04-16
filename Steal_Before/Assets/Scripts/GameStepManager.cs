@@ -9,7 +9,7 @@ public class GameStepManager : MonoBehaviour
     public static GameStepManager Instance;
 
     public List<Vector2> playerHistory = new List<Vector2>();
-    public int MaxHistory { get; set; } = 7;
+    public int MaxHistory = 7;
 
     public event System.Action OnPlayerStep;
     public event System.Action OnRewind;
@@ -46,6 +46,7 @@ public class GameStepManager : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex < 8)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            playerHistory.Clear();
         }
         else
         {

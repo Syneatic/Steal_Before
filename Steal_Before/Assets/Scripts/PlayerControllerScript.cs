@@ -15,6 +15,7 @@ public class PlayerControllerScript : MonoBehaviour
     [Header("Movement Settings")]
     public Rigidbody2D rb;
     Vector2 moveDirection;
+    private bool nextMap = false;
 
     public float checkDistance = 0.5f;
     public LayerMask collisionLayer;
@@ -108,6 +109,8 @@ public class PlayerControllerScript : MonoBehaviour
 
     private void OnMoveStarted(InputAction.CallbackContext context)
     {
+        if (nextMap) return;
+
         Vector2 dir = ReadDominantDirection(context);
         if (dir == Vector2.zero) return;
 
@@ -121,6 +124,8 @@ public class PlayerControllerScript : MonoBehaviour
 
     private void OnMoveCanceled(InputAction.CallbackContext context)
     {
+        if (nextMap) return;
+
         Vector2 dir = ReadDominantDirection(context);
 
         // If canceled returns zero (all keys released), clear everything
@@ -145,21 +150,27 @@ public class PlayerControllerScript : MonoBehaviour
         Vector2 startPos = transform.position;
         Vector2 targetPos = startPos + dir;
 
+        // 1. Wall check
         Collider2D hit = Physics2D.OverlapCircle(targetPos, 0.3f, collisionLayer);
-
         if (hit != null)
         {
             Debug.Log("Hit wall");
             return;
         }
 
+        // 2. Pre-check targetPos (where player is GOING, not where they are)
+        Collider2D hitTrigger = Physics2D.OverlapCircle(targetPos, 0.3f, Triggers);
+        bool isGoal = hitTrigger != null && hitTrigger.CompareTag("Goal");
+        bool isButton = hitTrigger != null && hitTrigger.CompareTag("Button");
+
+        // 3. Apply movement
         rb.position += dir;
         transform.position = rb.position;
 
+        // 4. History, audio, UI
         if (!AIMimicScript.GetIsMimic())
         {
             movementHistory.AddLast(rb.position);
-
             if (movementHistory.Count > maxNode) movementHistory.RemoveFirst();
         }
         else
@@ -174,38 +185,34 @@ public class PlayerControllerScript : MonoBehaviour
         AudioManager.Instance.PlaySound(AudioManager.Instance.moveSound, false);
         UpdatePendantUI();
 
-        Collider2D hitTrigger = Physics2D.OverlapCircle(transform.position, 0.3f, Triggers);
-
-        if (hitTrigger != null)
+        // 5. Handle button
+        if (isButton)
         {
-            if (hitTrigger.CompareTag("Button"))
-            {
-                if (hitTrigger.TryGetComponent(out TriggerScript button))
-                {
-                    button.PushButton();
-                }
-            }
-            else if (hitTrigger.CompareTag("Goal"))
-            {
-                GameStepManager.Instance.GoalReach();
-            }
+            if (hitTrigger.TryGetComponent(out TriggerScript button))
+                button.PushButton();
         }
 
-        // The Signal for the AI to move
+        // 6. Register step (AI moves, pendant updates, etc.)
         GameStepManager.Instance.RegisterStep(transform.position);
-
         Physics2D.SyncTransforms();
 
-        // 2. CHECK: Did we land on the same tile?
+        // 7. Enemy check
         Collider2D hitLand = Physics2D.OverlapCircle(transform.position, 0.3f, enemyLayer);
-
-        // 3. CHECK: Did we "Swap" places? (Did the enemy land where we just were?)
-        //Collider2D hitSwap = Physics2D.OverlapCircle(startPos, 0.3f, enemyLayer);
-
-        if (hitLand != null/* || hitSwap != null*/)
+        if (hitLand != null)
         {
-            // LOSE LOGIC
             GameStepManager.Instance.TriggerTouch();
+            return;
+        }
+
+        // 8. Goal last — after everything is registered
+        if (isGoal)
+        {
+            nextMap = true;
+            heldDirections.Clear();
+            controls.Disable();
+            movementHistory.Clear();
+            UpdatePendantUI();
+            GameStepManager.Instance.GoalReach();
         }
     }
 
@@ -229,8 +236,9 @@ public class PlayerControllerScript : MonoBehaviour
 
         //Reset player state
         movementHistory.Clear();
-        UpdatePendantUI();
+        heldDirections.Clear();
         movementHistory.AddLast(rewindPos);
+        UpdatePendantUI();
 
         //transform.position = rewindPos;
         //rb.position = rewindPos; //Update Rigidbody too to keep them in sync

@@ -26,11 +26,6 @@ public class TriggerScript : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    private void Start()
-    {
-        Subscribe();
-    }
-
     private void OnEnable()
     {
         // If the manager is already ready, subscribe now
@@ -41,8 +36,7 @@ public class TriggerScript : MonoBehaviour
     {
         if (GameStepManager.Instance != null)
         {
-            GameStepManager.Instance.OnPlayerStep -= HandleStep;
-            GameStepManager.Instance.OnPlayerStep -= OnSaveState;
+            GameStepManager.Instance.OnPlayerStep -= OnStep;
 
             GameStepManager.Instance.OnRewind -= RefreshButtonState;
         }
@@ -52,13 +46,17 @@ public class TriggerScript : MonoBehaviour
     {
         if (GameStepManager.Instance != null)
         {
-            GameStepManager.Instance.OnPlayerStep += HandleStep;
-            GameStepManager.Instance.OnPlayerStep += OnSaveState;
+            GameStepManager.Instance.OnPlayerStep += OnStep;
 
             GameStepManager.Instance.OnRewind += RefreshButtonState;
         }
     }
 
+    private void OnStep()
+    {
+        HandleStep();
+        OnSaveState();
+    }
 
     private void HandleStep()
     {
