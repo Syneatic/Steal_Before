@@ -23,12 +23,13 @@ public enum FloorType
 public enum ObstacleType
 {
     None,                       // Not an Obstacle
-    //Player,                   // Player
+    Player,                     // Player
     Goal,                       // Goal
     Door,                       // Door
     Button,                     // Button
     Enemy,                      // AI
-    Laser                       // Laser
+    LaserHori,                  // Laser
+    LaserVerti                  // Laser
 }
 
 [System.Serializable]
@@ -238,12 +239,25 @@ public class Map : MonoBehaviour
                 {
                     // Calculate position
                     Vector3 spawnPosition = new Vector3(obs.x * tileSize, obs.y * tileSize, 0.0f);
-
+                    GameObject spawnedObs = null;
                     // Spawn the prefab
                     if (((int)obs.type) < obstaclePrefabs.Length && obstaclePrefabs[((int)obs.type)] != null)
                     {
-                        GameObject spawnedObs = Instantiate(obstaclePrefabs[((int)obs.type)], spawnPosition, Quaternion.identity, obstacleHolder);
-                        spawnedObs.hideFlags = HideFlags.None;
+                        if (obs.type == ObstacleType.LaserHori)
+                        {
+                            spawnedObs = Instantiate(obstaclePrefabs[((int)obs.type)], spawnPosition, Quaternion.identity, obstacleHolder);
+                            spawnedObs.hideFlags = HideFlags.None;
+                        }
+                        else if (obs.type == ObstacleType.LaserVerti)
+                        {
+                            spawnedObs = Instantiate(obstaclePrefabs[((int)obs.type)], spawnPosition, Quaternion.Euler(new Vector3(0.0f, 0.0f, 90.0f)), obstacleHolder);
+                            spawnedObs.hideFlags = HideFlags.None;
+                        }
+                        else
+                        {
+                            spawnedObs = Instantiate(obstaclePrefabs[((int)obs.type)], spawnPosition, Quaternion.identity, obstacleHolder);
+                            spawnedObs.hideFlags = HideFlags.None;
+                        }
                     }
                 }
                 else
