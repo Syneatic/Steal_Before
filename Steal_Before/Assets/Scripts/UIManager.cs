@@ -4,17 +4,11 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager Instance;
 
     public GameObject SettingsPage;
     public GameObject CreditsPage;
     public GameObject MainMenu;
     public GameObject LevelSelect;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     void Start()
     {

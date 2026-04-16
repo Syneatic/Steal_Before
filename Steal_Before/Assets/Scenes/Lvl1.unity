@@ -4100,6 +4100,17 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &751436134 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4636672965761519857, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+  m_PrefabInstance: {fileID: 100485897881680948}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9784f5faa322ff4bbcd312f88fd7f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameplayUIManager
 --- !u!1 &755343667
 GameObject:
   m_ObjectHideFlags: 0
@@ -4435,7 +4446,7 @@ PrefabInstance:
     - target: {fileID: 6222315038754526312, guid: 9ae39a699b7d1cb43a30db37057ed3e6, type: 3}
       propertyPath: GPuiManager
       value: 
-      objectReference: {fileID: 3735658153997308370}
+      objectReference: {fileID: 751436134}
     - target: {fileID: 6222315038754526312, guid: 9ae39a699b7d1cb43a30db37057ed3e6, type: 3}
       propertyPath: AIMimicScript
       value: 
@@ -10691,6 +10702,71 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1001 &100485897881680948
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1280
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 720
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2543332836001374531, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: pauseMenuUI
+      value: 
+      objectReference: {fileID: 534646144}
+    - target: {fileID: 2920642308881169960, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_Name
+      value: Manager Folder
+      objectReference: {fileID: 0}
+    - target: {fileID: 4636672965761519857, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: pendantAnimator
+      value: 
+      objectReference: {fileID: 1355659828}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
 --- !u!1001 &2854155387091409354
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11676,94 +11752,6 @@ PrefabInstance:
       addedObject: {fileID: 1086056847}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b26dac6a90dff740bf2ac7948658ffd, type: 3}
---- !u!1001 &3735658153997308369
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 443312165363106217, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_Name
-      value: Managers
-      objectReference: {fileID: 0}
-    - target: {fileID: 1040970999945779785, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: pendantAnimator
-      value: 
-      objectReference: {fileID: 1355659828}
-    - target: {fileID: 2044843294503158517, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: pauseMenuUI
-      value: 
-      objectReference: {fileID: 534646144}
-    - target: {fileID: 4267500429356022623, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: BackGroundMenu
-      value: 
-      objectReference: {fileID: 8300000, guid: d6e28ba6c536c47488fb9fd72318e8ca, type: 3}
-    - target: {fileID: 4827890269177011894, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4827890269177011894, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4827890269177011894, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4827890269177011894, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4827890269177011894, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4827890269177011894, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4827890269177011894, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4827890269177011894, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4827890269177011894, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4827890269177011894, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7889080917001908164, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: pauseMenuUI
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 9012037588064073866, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: pendantAnimator
-      value: 
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
---- !u!114 &3735658153997308370 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1040970999945779785, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-  m_PrefabInstance: {fileID: 3735658153997308369}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9784f5faa322ff4bbcd312f88fd7f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameplayUIManager
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -11771,10 +11759,10 @@ SceneRoots:
   - {fileID: 2050623254}
   - {fileID: 2854155387091409354}
   - {fileID: 454709342}
-  - {fileID: 3735658153997308369}
   - {fileID: 1364720825}
   - {fileID: 819679469}
   - {fileID: 115137157}
   - {fileID: 1227049637}
   - {fileID: 1355659827}
   - {fileID: 534646143}
+  - {fileID: 100485897881680948}

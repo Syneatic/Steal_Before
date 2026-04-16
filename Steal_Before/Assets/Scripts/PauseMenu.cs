@@ -22,6 +22,8 @@ public class VolumeControl : MonoBehaviour
 
 public class PauseMenu : MonoBehaviour
 {
+    public static PauseMenu Instance;
+
     static bool GamePaused = false;
 
     public GameObject pauseMenuUI;
@@ -29,6 +31,7 @@ public class PauseMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (SceneManager.GetActiveScene().buildIndex == 0) return;
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             if (GamePaused)

@@ -6994,7 +6994,7 @@ PrefabInstance:
     - target: {fileID: 6222315038754526312, guid: 9ae39a699b7d1cb43a30db37057ed3e6, type: 3}
       propertyPath: GPuiManager
       value: 
-      objectReference: {fileID: 1260335905}
+      objectReference: {fileID: 0}
     - target: {fileID: 6222315038754526312, guid: 9ae39a699b7d1cb43a30db37057ed3e6, type: 3}
       propertyPath: AIMimicScript
       value: 
@@ -15498,93 +15498,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1001 &1260335903
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 837118258751526625, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_Name
-      value: Managers
-      objectReference: {fileID: 0}
-    - target: {fileID: 875492321591303522, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 3.32606
-      objectReference: {fileID: 0}
-    - target: {fileID: 875492321591303522, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 6.22131
-      objectReference: {fileID: 0}
-    - target: {fileID: 875492321591303522, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 875492321591303522, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 875492321591303522, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 875492321591303522, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 875492321591303522, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 875492321591303522, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 875492321591303522, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 875492321591303522, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1040970999945779785, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: pendantAnimator
-      value: 
-      objectReference: {fileID: 1011867408}
-    - target: {fileID: 2044843294503158517, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-      propertyPath: pauseMenuUI
-      value: 
-      objectReference: {fileID: 768375850}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
---- !u!114 &1260335904 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2044843294503158517, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-  m_PrefabInstance: {fileID: 1260335903}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 647c29fc53e83374c9fc140aa4d9ce86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
---- !u!114 &1260335905 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1040970999945779785, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
-  m_PrefabInstance: {fileID: 1260335903}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9784f5faa322ff4bbcd312f88fd7f96, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameplayUIManager
 --- !u!1 &1267857032
 GameObject:
   m_ObjectHideFlags: 0
@@ -16272,6 +16185,71 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1001 &1301361176
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1280
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 720
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1076337810229296060, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2543332836001374531, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: pauseMenuUI
+      value: 
+      objectReference: {fileID: 768375850}
+    - target: {fileID: 2920642308881169960, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: m_Name
+      value: Manager Folder
+      objectReference: {fileID: 0}
+    - target: {fileID: 4636672965761519857, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+      propertyPath: pendantAnimator
+      value: 
+      objectReference: {fileID: 1011867408}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
 --- !u!1 &1326246956
 GameObject:
   m_ObjectHideFlags: 0
@@ -24188,11 +24166,11 @@ PrefabInstance:
     - target: {fileID: 342074519314887277, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1260335904}
+      objectReference: {fileID: 0}
     - target: {fileID: 6304693441120698797, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1260335904}
+      objectReference: {fileID: 0}
     - target: {fileID: 7058582198368322987, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -24276,7 +24254,7 @@ PrefabInstance:
     - target: {fileID: 8289937904251991670, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1260335904}
+      objectReference: {fileID: 0}
     - target: {fileID: 9160987919092843540, guid: 60773b63f8c5fba41a18d8fbb345b892, type: 3}
       propertyPath: m_Name
       value: PauseMenu
@@ -24298,9 +24276,9 @@ SceneRoots:
   - {fileID: 70662920}
   - {fileID: 272124941}
   - {fileID: 3696584677864709871}
-  - {fileID: 1260335903}
   - {fileID: 606498393}
   - {fileID: 1011867407}
   - {fileID: 238641694}
   - {fileID: 451023448}
   - {fileID: 1877958075}
+  - {fileID: 1301361176}
