@@ -45,4 +45,15 @@ public class AudioManager : MonoBehaviour
         else
             gameplaySource.PlayOneShot(clip);
     }
+
+    public void PlayMenuSelect()
+    {
+        PlaySound(selectSound, true);
+    }
+
+    // Easy access for UI "Start" Buttons
+    public void PlayStartButton()
+    {
+        PlaySound(startButtonSound, true);
+    }
 }
