@@ -98,4 +98,10 @@ public class UIManager : MonoBehaviour
         lhs.SetActive(!lhs.activeSelf);
         rhs.SetActive(!rhs.activeSelf);
     }
+
+    // Drag this into your Button's OnClick event!
+    public void ButtonSound()
+    {
+        AudioManager.Instance.PlaySound(AudioManager.Instance.selectSound, true);
+    }
 }

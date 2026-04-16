@@ -9,7 +9,7 @@ public class GameStepManager : MonoBehaviour
     public static GameStepManager Instance;
 
     public List<Vector2> playerHistory = new List<Vector2>();
-    public int MaxHistory { get; set; } = 7;
+    public int MaxHistory = 7;
 
     public event System.Action OnPlayerStep;
     public event System.Action OnRewind;
@@ -18,6 +18,11 @@ public class GameStepManager : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); // Kill duplicate on reload
+            return;
+        }
         Instance = this;
     }
 
@@ -32,13 +37,13 @@ public class GameStepManager : MonoBehaviour
 
     public void TriggerRewind() { OnRewind?.Invoke(); }
     public void TriggerTouch() {
+
+        OnLose?.Invoke();
         //Indicate here the lose condition when player touches with enemy layermask
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
 
         // Reload it
-        SceneManager.LoadScene(currentSceneIndex);
-
-        OnLose?.Invoke(); 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void GoalReach()
@@ -46,6 +51,7 @@ public class GameStepManager : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex < 8)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            playerHistory.Clear();
         }
         else
         {
