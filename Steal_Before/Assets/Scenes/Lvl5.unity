@@ -2844,11 +2844,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8135987332035373899, guid: 601188287cdfa08469eae80df5839b38, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.5472047
+      value: 19.15
       objectReference: {fileID: 0}
     - target: {fileID: 8135987332035373899, guid: 601188287cdfa08469eae80df5839b38, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 16.857353
+      value: 6.15
       objectReference: {fileID: 0}
     - target: {fileID: 8135987332035373899, guid: 601188287cdfa08469eae80df5839b38, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6833,7 +6833,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5908450235215022971, guid: be8217f6a147ee04cbf559a93c42e017, type: 3}
   m_Color: {r: 0.9960785, g: 0.70980394, b: 0, a: 1}
@@ -6994,7 +6994,7 @@ PrefabInstance:
     - target: {fileID: 6222315038754526312, guid: 9ae39a699b7d1cb43a30db37057ed3e6, type: 3}
       propertyPath: GPuiManager
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1301361178}
     - target: {fileID: 6222315038754526312, guid: 9ae39a699b7d1cb43a30db37057ed3e6, type: 3}
       propertyPath: AIMimicScript
       value: 
@@ -8588,7 +8588,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5908450235215022971, guid: be8217f6a147ee04cbf559a93c42e017, type: 3}
   m_Color: {r: 0.77647066, g: 0, b: 0.9960785, a: 1}
@@ -16261,6 +16261,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 647c29fc53e83374c9fc140aa4d9ce86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
+--- !u!114 &1301361178 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4636672965761519857, guid: 16c40973dfff22144a8e9759a93fb37f, type: 3}
+  m_PrefabInstance: {fileID: 1301361176}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9784f5faa322ff4bbcd312f88fd7f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameplayUIManager
 --- !u!1 &1326246956
 GameObject:
   m_ObjectHideFlags: 0
@@ -21051,7 +21062,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5908450235215022971, guid: be8217f6a147ee04cbf559a93c42e017, type: 3}
   m_Color: {r: 0.9960785, g: 0.70980394, b: 0, a: 1}
@@ -22467,7 +22478,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 5908450235215022971, guid: be8217f6a147ee04cbf559a93c42e017, type: 3}
   m_Color: {r: 0.77647066, g: 0, b: 0.9960785, a: 1}
