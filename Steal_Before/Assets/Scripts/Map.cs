@@ -54,7 +54,10 @@ public class Map : MonoBehaviour
     [Header("Editor Tools")]
     [Tooltip("Check this box to manually redraw the map after changing a tile in the array below.")]
     public bool refreshMap = false;
-    public bool clearMap = false;
+    //public bool clearMap = false;
+
+    [Tooltip("Turn this on to see the Array Index and X,Y coordinates floating over the tiles!")]
+    public bool showDebugText = false;
 
     [Header("Saved Map Data")]
     public FloorType[] mapGrid;
@@ -99,12 +102,12 @@ public class Map : MonoBehaviour
                 refreshMap = false;
             }
 
-            if(clearMap)
+            /*if(clearMap)
             {
                 GenerateMapData();
                 DrawMap();
                 clearMap = false;
-            }
+            }*/
         }
     }
 
@@ -351,4 +354,37 @@ public class Map : MonoBehaviour
     {
         return floorType == FloorType.Tile;
     }
+
+#if UNITY_EDITOR
+    void OnDrawGizmos()
+    {
+        // Only draw the text if the checkbox is ticked and the map exists!
+        if (showDebugText && mapGrid != null && mapGrid.Length > 0)
+        {
+            // Set the text style (make it visible, maybe centered, colored)
+            GUIStyle textStyle = new GUIStyle();
+            textStyle.normal.textColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+            textStyle.fontSize = 14;
+            textStyle.alignment = TextAnchor.MiddleCenter;
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    int index = x + (y * width);
+
+                    // Calculate the exact center of this tile
+                    Vector3 tileCenter = new Vector3(x * tileSize, y * tileSize, 0);
+
+                    // Create the text string we want to show
+                    string debugInfo = $"[{index}]";
+
+                    // Draw the text floating in the Scene View!
+                    UnityEditor.Handles.Label(tileCenter, debugInfo, textStyle);
+                }
+            }
+        }
+    }
+#endif
 }
+
