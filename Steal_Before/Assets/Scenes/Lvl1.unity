@@ -11696,6 +11696,10 @@ PrefabInstance:
       propertyPath: pauseMenuUI
       value: 
       objectReference: {fileID: 534646144}
+    - target: {fileID: 4267500429356022623, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
+      propertyPath: BackGroundMenu
+      value: 
+      objectReference: {fileID: 8300000, guid: d6e28ba6c536c47488fb9fd72318e8ca, type: 3}
     - target: {fileID: 4827890269177011894, guid: df9ed3350ba435d418c1b4fb12a15dec, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

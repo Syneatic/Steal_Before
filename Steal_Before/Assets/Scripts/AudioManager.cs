@@ -33,6 +33,8 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(gameObject); // Prevents having two managers at once
         }
+
+
     }
 
     // A simple function to play any sound through any source
@@ -44,6 +46,7 @@ public class AudioManager : MonoBehaviour
             menuSource.PlayOneShot(clip);
         else
             gameplaySource.PlayOneShot(clip);
+
     }
 
     public void PlayMenuSelect()
@@ -56,4 +59,8 @@ public class AudioManager : MonoBehaviour
     {
         PlaySound(startButtonSound, true);
     }
+
+ 
+       
+    
 }
