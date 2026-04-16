@@ -46,6 +46,7 @@ public class GameStepManager : MonoBehaviour
         if (SceneManager.GetActiveScene().buildIndex < 8)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            playerHistory.Clear();
         }
         else
         {
